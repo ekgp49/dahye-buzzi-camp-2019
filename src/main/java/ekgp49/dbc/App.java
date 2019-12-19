@@ -6,35 +6,44 @@ public class App {
     // 카페 명단 출력
     Scanner keyboard = new Scanner(System.in);
     final int SIZE = 100;
-    String[] cafeArea = new String[SIZE];
-    String[] cafeNum = new String[SIZE];
-    String[] cafeName = new String[SIZE];
-    String[] cafeMenu = new String[SIZE]; 
-    String[] starRate = new String[SIZE];
-    String response;
+
+    class Search {
+      String cafeArea;
+      String cafeNum;
+      String cafeName;
+      String cafeMenu; 
+      String starRate;
+    }
     int count = 0;
+
+    Search[] searches = new Search[SIZE];
 
     for(int i = 0; i < SIZE; i++) {
       count++;
+
+      Search search = new Search();
+
       System.out.print("지역은? : ");
-      cafeArea[i] = keyboard.nextLine();
+      search.cafeArea = keyboard.nextLine();
 
       System.out.print("카페 수는? : ");
-      cafeNum[i] = keyboard.nextLine();
+      search.cafeNum = keyboard.nextLine();
 
       System.out.print("카페 상호는? : ");
-      cafeName[i] = keyboard.nextLine();    
+      search.cafeName = keyboard.nextLine();    
 
       System.out.print("메뉴는? : ");
-      cafeMenu[i] = keyboard.nextLine();
+      search.cafeMenu = keyboard.nextLine();
 
       System.out.print("별점은? : ");
-      starRate[i] = keyboard.nextLine();
+      search.starRate = keyboard.nextLine();
+
+      searches[i] = search;
 
       System.out.println("계속 입력하시겠습니까? Y/N");
       System.out.print("=> ");
 
-      response = keyboard.nextLine(); 
+      String response = keyboard.nextLine(); 
 
       System.out.println();
 
@@ -47,10 +56,11 @@ public class App {
     System.out.println("카페 명단");
 
     for(int i = 0; i < count; i++) {
+      Search search = searches[i];
       System.out.printf("%s, %s, %s, %s, %s\n", 
-          cafeArea[i], cafeNum[i], cafeName[i], cafeMenu[i], starRate[i]);
+          search.cafeArea, search.cafeNum, search.cafeName, search.cafeMenu, search.starRate);
     }
-    
+
     //    System.out.printf("지역 : %s\n", cafeArea);
     //    System.out.printf("카페 수 : %s\n", cafeNum);
     //    System.out.printf("상호 : %s\n", cafeName);

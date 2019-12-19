@@ -7,51 +7,60 @@ public class App2 {
     // 한 개의 카페 정보 출력
     Scanner keyboard = new Scanner(System.in);
     final int SIZE = 100;
-    String[] cafeName = new String[SIZE];
-    String[] cafeAddress = new String[SIZE];
-    String[] cafeCall = new String[SIZE];
-    String[] cafeWebSite = new String[SIZE]; 
-    String[] openTime = new String[SIZE];
-    String[] closeTime = new String[SIZE];
-    String[] holliday = new String[SIZE]; 
-    String[] cafeMenu = new String[SIZE];
-    String[] starRate = new String[SIZE];
-    String response;
+    
+    class Information {
+    String cafeName;
+    String cafeAddress;
+    String cafeCall;
+    String cafeWebSite; 
+    String openTime;
+    String closeTime;
+    String holliday; 
+    String cafeMenu;
+    String starRate;
+    }
     int count = 0;
 
+    Information[] informations = new Information[SIZE];
+    
     for (int i = 0; i < SIZE; i++) {
       count++;
+      
+      Information info = new Information();
+      
       System.out.print("카페 상호는? : ");
-      cafeName[i] = keyboard.nextLine();
+      info.cafeName = keyboard.nextLine();
 
       System.out.print("주소는? : ");
-      cafeAddress[i] = keyboard.nextLine();
+      info.cafeAddress = keyboard.nextLine();
 
       System.out.print("연락처는? : ");
-      cafeCall[i] = keyboard.nextLine();
+      info.cafeCall = keyboard.nextLine();
 
       System.out.print("웹사이트는? : ");
-      cafeWebSite[i] = keyboard.nextLine();
+      info.cafeWebSite = keyboard.nextLine();
 
       System.out.print("오픈시간은? : ");
-      openTime[i] = keyboard.nextLine();
+      info.openTime = keyboard.nextLine();
 
       System.out.print("종료시간은? : ");
-      closeTime[i] = keyboard.nextLine();
+      info.closeTime = keyboard.nextLine();
 
       System.out.print("정기 휴일은? : ");
-      holliday[i] = keyboard.nextLine();
+      info.holliday = keyboard.nextLine();
 
       System.out.print("메뉴는? : ");
-      cafeMenu[i] = keyboard.nextLine();
+      info.cafeMenu = keyboard.nextLine();
 
       System.out.print("별점은? : ");
-      starRate[i] = keyboard.nextLine();
-
+      info.starRate = keyboard.nextLine();
+  
+      informations[i] = info;
+      
       System.out.println("계속 입력하시겠습니까? Y/N");
       System.out.print("=> ");
 
-      response = keyboard.nextLine(); 
+      String response = keyboard.nextLine(); 
 
       System.out.println();
 
@@ -62,9 +71,11 @@ public class App2 {
     }
 
     for(int i = 0; i < count; i++) {
+      Information info = informations[i];
+
       System.out.printf("%s, %s, %s, %s, %s ~ %s, %s, %s, %s\n", 
-          cafeName[i], cafeAddress[i], cafeCall[i], cafeWebSite[i], openTime[i], 
-          closeTime[i], holliday[i], cafeMenu[i], starRate[i]);
+      info.cafeName, info.cafeAddress, info.cafeCall, info.cafeWebSite, info.openTime, 
+      info.closeTime, info.holliday, info.cafeMenu, info.starRate);
     }
 
 
