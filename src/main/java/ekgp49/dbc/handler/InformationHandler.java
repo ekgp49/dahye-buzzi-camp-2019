@@ -1,9 +1,9 @@
-package ekgp49.dbc;
+package ekgp49.dbc.handler;
 
 import java.util.Scanner;
 
 public class InformationHandler {
-  static Scanner keyboard;
+  public static Scanner keyboard;
   static final int INFORMATION_SIZE = 100;
   static class Information {
     String cafeName;
@@ -19,7 +19,7 @@ public class InformationHandler {
   static Information[] informations = new Information[INFORMATION_SIZE];
   static int informationsCount = 0;
  
-  static void listInformaition() {
+  public static void listInformaition() {
     for(int i = 0; i < informationsCount; i++) {
       Information info = informations[i];
       System.out.printf("%s, %s, %s, %s, %s ~ %s, %s, %s, %s\n", 
@@ -28,7 +28,7 @@ public class InformationHandler {
     }
   }
 
-  static void addInformation() {
+  public static void addInformation() {
     Information information = new Information();
     System.out.print("카페 상호는? : ");
     information.cafeName = keyboard.nextLine();

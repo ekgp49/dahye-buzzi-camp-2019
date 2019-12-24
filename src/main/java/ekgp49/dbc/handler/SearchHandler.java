@@ -1,9 +1,9 @@
-package ekgp49.dbc;
+package ekgp49.dbc.handler;
 
 import java.util.Scanner;
 
 public class SearchHandler {
-  static Scanner keyboard;
+  public static Scanner keyboard;
   static final int SEARCH_SIZE = 100;
   static class Search {
     String cafeArea;
@@ -14,7 +14,7 @@ public class SearchHandler {
   static Search[] searches = new Search[SEARCH_SIZE];
   static int searchesCount = 0;
   
-  static void listSearch() {
+  public static void listSearch() {
     System.out.println("검색 키워드");
     for(int i = 0; i < searchesCount; i++) {
       Search s = searches[i];
@@ -23,7 +23,7 @@ public class SearchHandler {
     }
   }
 
-  static void addSearch() {
+  public static void addSearch() {
     Search search = new Search();
     System.out.print("지역은? : ");
     search.cafeArea = keyboard.nextLine();

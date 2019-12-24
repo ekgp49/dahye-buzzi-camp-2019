@@ -1,10 +1,10 @@
-package ekgp49.dbc;
+package ekgp49.dbc.handler;
 
 import java.sql.Date;
 import java.util.Scanner;
 
 public class ReviewHandler {
-  static Scanner keyboard;
+  public static Scanner keyboard;
   static final int REVIEW_SIZE = 100;
   static class Review {
     String cafeName;
@@ -19,7 +19,7 @@ public class ReviewHandler {
   static Review[] reviews = new Review[REVIEW_SIZE];
   static int reviewsCount = 0;
   
-  static void listReview() {
+  public static void listReview() {
     System.out.println("리뷰");
     for(int i = 0; i < reviewsCount; i++) {
       Review r = reviews[i];
@@ -29,7 +29,7 @@ public class ReviewHandler {
     }
   }
 
-  static void addReview() {
+  public static void addReview() {
     System.out.println("리뷰");
     Review review = new Review();
     System.out.print("카페 상호는? : ");

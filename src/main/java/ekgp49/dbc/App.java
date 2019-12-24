@@ -1,6 +1,9 @@
 package ekgp49.dbc;
 
 import java.util.Scanner;
+import ekgp49.dbc.handler.InformationHandler;
+import ekgp49.dbc.handler.ReviewHandler;
+import ekgp49.dbc.handler.SearchHandler;
 public class App {
   static Scanner keyboard = new Scanner(System.in);
   
