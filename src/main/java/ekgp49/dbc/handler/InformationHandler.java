@@ -1,21 +1,12 @@
 package ekgp49.dbc.handler;
 
 import java.util.Scanner;
+import ekgp49.dbc.domain.Information;
 
 public class InformationHandler {
   public static Scanner keyboard;
   static final int INFORMATION_SIZE = 100;
-  static class Information {
-    String cafeName;
-    String cafeAddress;
-    String cafeCall;
-    String cafeWebSite; 
-    String openTime;
-    String closeTime;
-    String holliday; 
-    String cafeMenu;
-    String starRate;
-  }
+
   static Information[] informations = new Information[INFORMATION_SIZE];
   static int informationsCount = 0;
  

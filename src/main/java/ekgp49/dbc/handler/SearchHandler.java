@@ -1,16 +1,12 @@
 package ekgp49.dbc.handler;
 
 import java.util.Scanner;
+import ekgp49.dbc.domain.Search;
 
 public class SearchHandler {
   public static Scanner keyboard;
   static final int SEARCH_SIZE = 100;
-  static class Search {
-    String cafeArea;
-    String cafeName;
-    String cafeMenu; 
-    String starRate;
-  }
+  
   static Search[] searches = new Search[SEARCH_SIZE];
   static int searchesCount = 0;
   

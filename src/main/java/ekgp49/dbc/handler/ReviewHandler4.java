@@ -4,7 +4,7 @@ import java.sql.Date;
 import java.util.Scanner;
 import ekgp49.dbc.domain.Review;
 
-public class ReviewHandler {
+public class ReviewHandler4 {
   public static Scanner keyboard;
   static final int REVIEW_SIZE = 100;
 
