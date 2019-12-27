@@ -9,13 +9,9 @@ public class App {
   
   public static void main(String[] args) {
     
-    SearchHandler.keyboard = keyboard;
-    InformationHandler.keyboard = keyboard;
-    ReviewHandler.keyboard = keyboard;
-    
-    SearchHandler search = new SearchHandler();
-    ReviewHandler review = new ReviewHandler();
-    InformationHandler information = new InformationHandler();
+    SearchHandler search = new SearchHandler(keyboard);
+    ReviewHandler review = new ReviewHandler(keyboard);
+    InformationHandler information = new InformationHandler(keyboard);
     
     String command; 
     do {

@@ -4,12 +4,16 @@ import java.util.Scanner;
 import ekgp49.dbc.domain.Information;
 
 public class InformationHandler {
-  public static Scanner keyboard;
   static final int INFORMATION_SIZE = 100;
 
+  public Scanner input;
   Information[] informations = new Information[INFORMATION_SIZE];
   int informationsCount = 0;
  
+  public InformationHandler(Scanner input) {
+    this.input = input;
+  }
+  
   public void listInformaition() {
     for(int i = 0; i < this.informationsCount; i++) {
       Information info = this.informations[i];
@@ -22,23 +26,23 @@ public class InformationHandler {
   public void addInformation() {
     Information information = new Information();
     System.out.print("카페 상호는? : ");
-    information.cafeName = keyboard.nextLine();
+    information.cafeName = input.nextLine();
     System.out.print("주소는? : ");
-    information.cafeAddress = keyboard.nextLine();
+    information.cafeAddress = input.nextLine();
     System.out.print("연락처는? : ");
-    information.cafeCall = keyboard.nextLine();
+    information.cafeCall = input.nextLine();
     System.out.print("웹사이트는? : ");
-    information.cafeWebSite = keyboard.nextLine();
+    information.cafeWebSite = input.nextLine();
     System.out.print("오픈시간은? : ");
-    information.openTime = keyboard.nextLine();
+    information.openTime = input.nextLine();
     System.out.print("종료시간은? : ");
-    information.closeTime = keyboard.nextLine();
+    information.closeTime = input.nextLine();
     System.out.print("정기 휴일은? : ");
-    information.holliday = keyboard.nextLine();
+    information.holliday = input.nextLine();
     System.out.print("메뉴는? : ");
-    information.cafeMenu = keyboard.nextLine();
+    information.cafeMenu = input.nextLine();
     System.out.print("별점은? : ");
-    information.starRate = keyboard.nextLine();
+    information.starRate = input.nextLine();
    
     this.informations[this.informationsCount++] = information;
     System.out.println("저장하였습니다.");
