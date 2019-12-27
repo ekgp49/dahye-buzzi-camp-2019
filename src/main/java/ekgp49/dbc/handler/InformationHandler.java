@@ -7,19 +7,19 @@ public class InformationHandler {
   public static Scanner keyboard;
   static final int INFORMATION_SIZE = 100;
 
-  static Information[] informations = new Information[INFORMATION_SIZE];
-  static int informationsCount = 0;
+  Information[] informations = new Information[INFORMATION_SIZE];
+  int informationsCount = 0;
  
-  public static void listInformaition() {
-    for(int i = 0; i < informationsCount; i++) {
-      Information info = informations[i];
+  public void listInformaition() {
+    for(int i = 0; i < this.informationsCount; i++) {
+      Information info = this.informations[i];
       System.out.printf("%s, %s, %s, %s, %s ~ %s, %s, %s, %s\n", 
       info.cafeName, info.cafeAddress, info.cafeCall, info.cafeWebSite, info.openTime, 
       info.closeTime, info.holliday, info.cafeMenu, info.starRate);
     }
   }
 
-  public static void addInformation() {
+  public void addInformation() {
     Information information = new Information();
     System.out.print("카페 상호는? : ");
     information.cafeName = keyboard.nextLine();
@@ -40,7 +40,7 @@ public class InformationHandler {
     System.out.print("별점은? : ");
     information.starRate = keyboard.nextLine();
    
-    informations[informationsCount++] = information;
+    this.informations[this.informationsCount++] = information;
     System.out.println("저장하였습니다.");
   }
 

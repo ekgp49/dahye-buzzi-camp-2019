@@ -3,10 +3,6 @@ package ekgp49.dbc;
 import java.util.Scanner;
 import ekgp49.dbc.handler.InformationHandler;
 import ekgp49.dbc.handler.ReviewHandler;
-import ekgp49.dbc.handler.ReviewHandler2;
-import ekgp49.dbc.handler.ReviewHandler3;
-import ekgp49.dbc.handler.ReviewHandler4;
-import ekgp49.dbc.handler.ReviewHandler5;
 import ekgp49.dbc.handler.SearchHandler;
 public class App {
   static Scanner keyboard = new Scanner(System.in);
@@ -16,11 +12,10 @@ public class App {
     SearchHandler.keyboard = keyboard;
     InformationHandler.keyboard = keyboard;
     ReviewHandler.keyboard = keyboard;
-    ReviewHandler2.keyboard = keyboard;
-    ReviewHandler3.keyboard = keyboard;
-    ReviewHandler4.keyboard = keyboard;
-    ReviewHandler5.keyboard = keyboard;
     
+    SearchHandler search = new SearchHandler();
+    ReviewHandler review = new ReviewHandler();
+    InformationHandler information = new InformationHandler();
     
     String command; 
     do {
@@ -29,46 +24,25 @@ public class App {
    
       switch (command) {
         case "/search/add":
-          SearchHandler.addSearch();
+          search.addSearch();
           break;
         case "/search/list":
-          SearchHandler.listSearch();
+          search.listSearch();
           break;
         case "/information/add":
-          InformationHandler.addInformation();
+          information.addInformation();
           break;
         case "/information/list":
-          InformationHandler.listInformaition();
+          information.listInformaition();
           break;
         case "/review/add":
-          ReviewHandler.addReview();
+          review.addReview();
           break;
         case "/review/list":
-          ReviewHandler.listReview();
+          review.listReview();
           break;
-        case "/review2/add":
-          ReviewHandler2.addReview();
-          break;
-        case "/review2/list":
-          ReviewHandler2.listReview();
-          break;
-        case "/review3/add":
-          ReviewHandler3.addReview();
-          break;
-        case "/review3/list":
-          ReviewHandler3.listReview();
-          break;
-        case "/review4/add":
-          ReviewHandler4.addReview();
-          break;
-        case "/review4/list":
-          ReviewHandler4.listReview();
-          break;
-        case "/review5/add":
-          ReviewHandler5.addReview();
-          break;
-        case "/review5/list":
-          ReviewHandler5.listReview();
+        case "/review/star":
+          review.SelectStarRateReview();
           break;
         default:
           if (!command.equalsIgnoreCase("quit")) {

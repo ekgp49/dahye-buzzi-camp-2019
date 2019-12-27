@@ -5,7 +5,7 @@ import java.sql.Date;
 public class Review {
   public String cafeName;
   public String customer;
-  public String starRate;
+  public int starRate;
   public String content;
   public int viewCount;
   public Date createdDate; 
