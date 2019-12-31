@@ -20,8 +20,8 @@ public class ReviewHandler {
     for(int i = 0; i < reviewsCount; i++) {
       Review r = this.reviews[i];
       System.out.printf("%s, %s, %s, %s, %s, %s \n%s\n", 
-          r.cafeName, r.customer, r.starRate, r.createdDate,
-          r.timeFormFromToday, r.viewCount, r.content);
+          r.getCafeName(), r.getCustomer(), r.getStarRate(), r.getCreatedDate(),
+          r.getTimeFormFromToday(), r.getViewCount(), r.getContent());
     }
   }
 
@@ -29,18 +29,17 @@ public class ReviewHandler {
     System.out.println("리뷰");
     Review review = new Review();
     System.out.print("카페 상호는? : ");
-    review.cafeName = input.nextLine();
+    review.setCafeName(this.input.nextLine());
     System.out.print("고객은? : ");
-    review.customer = input.nextLine();
+    review.setCustomer(this.input.nextLine());
     System.out.print("별점은? : ");
-    review.starRate = input.nextInt();
-    input.nextLine();
+    review.setStarRate(this.input.nextInt());
+    this.input.nextLine();
     System.out.print("내용은? : ");
-    review.content = input.nextLine();
-    review.createdDate = new Date(System.currentTimeMillis()); 
-    review.today = new java.util.Date(); 
-    review.timeFormFromToday = String.format("%1$tp %1$tH:%1$tM:%1$tS ", review.today);
-    review.viewCount = 0;
+    review.setContent(this.input.nextLine());
+    review.setCreatedDate(new Date(System.currentTimeMillis())); 
+    review.setTimeFormFromToday(String.format("%1$tp %1$tH:%1$tM:%1$tS ", new java.util.Date()));
+    review.setViewCount(0);
 
     this.reviews[this.reviewsCount++] = review;
     System.out.println("저장하였습니다.");
@@ -49,10 +48,10 @@ public class ReviewHandler {
   public void SelectStarRateReview() {
     System.out.print("별점은? ");
     int star = input.nextInt();
-    input.nextLine();
+    this.input.nextLine();
     for(int i = 0; i < this.reviewsCount; i++) {
-      if (star == this.reviews[i].starRate) {
-        System.out.println(this.reviews[i].cafeName);
+      if (star == this.reviews[i].getStarRate()) {
+        System.out.println(this.reviews[i].getCafeName());
       }
     }
   }
