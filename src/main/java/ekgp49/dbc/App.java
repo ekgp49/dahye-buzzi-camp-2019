@@ -37,9 +37,9 @@ public class App {
         case "/review/list":
           review.listReview();
           break;
-        case "/review/star":
-          review.SelectStarRateReview();
-          break;
+//        case "/review/star":
+//          review.SelectStarRateReview();
+//          break; 일단은 막아놓자
         default:
           if (!command.equalsIgnoreCase("quit")) {
             System.out.println("실행할 수 없는 명령입니다.");

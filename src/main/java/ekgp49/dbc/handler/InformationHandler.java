@@ -5,25 +5,26 @@ import ekgp49.dbc.domain.Information;
 
 public class InformationHandler {
   public Scanner input;
-  InformationList informationList;
-  
+  ArrayList informationList;
+
   public InformationHandler(Scanner input) {
     this.input = input;
-    informationList = new InformationList();
+    informationList = new ArrayList();
   }
-  
+
   public InformationHandler(Scanner input, int capacity) {
     this.input = input;
-    informationList = new InformationList(capacity);
+    informationList = new ArrayList(capacity);
   }
-  
+
   public void listInformaition() {
-    Information[] arr = informationList.toArray();
-    for(Information info : arr) {
+    Object[] arr = informationList.toArray();
+    for(Object obj : arr) {
+      Information info = (Information) obj;
       System.out.printf("%s, %s, %s, %s, %s ~ %s, %s, %s, %s\n", 
-      info.getCafeName(), info.getCafeAddress(), info.getCafeCall(),
-      info.getCafeWebSite(), info.getOpenTime(), 
-      info.getCloseTime(), info.getHolliday(), info.getCafeMenu(), info.getStarRate());
+          info.getCafeName(), info.getCafeAddress(), info.getCafeCall(),
+          info.getCafeWebSite(), info.getOpenTime(), 
+          info.getCloseTime(), info.getHolliday(), info.getCafeMenu(), info.getStarRate());
     }
   }
 
@@ -47,7 +48,7 @@ public class InformationHandler {
     information.setCafeMenu(this.input.nextLine());
     System.out.print("별점은? : ");
     information.setStarRate(this.input.nextLine());
-   
+
     this.informationList.add(information);
     System.out.println("저장하였습니다.");
   }

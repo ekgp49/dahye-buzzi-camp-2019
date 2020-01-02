@@ -6,22 +6,23 @@ import ekgp49.dbc.domain.Review;
 
 public class ReviewHandler {
   public Scanner input;
-  ReviewList reviewList;
+  ArrayList reviewList;
 
   public ReviewHandler(Scanner input) {
     this.input = input;
-    reviewList = new ReviewList();
+    reviewList = new ArrayList();
   }
 
   public ReviewHandler(Scanner input, int capacity) {
     this.input = input;
-    reviewList = new ReviewList(capacity);
+    reviewList = new ArrayList(capacity);
   }
 
   public void listReview() {
     System.out.println("리뷰");
-    Review[] arr = reviewList.toArray();
-    for(Review r : arr) {
+    Object[] arr = reviewList.toArray();
+    for(Object obj : arr) {
+      Review r = (Review) obj;
       System.out.printf("%s, %s, %s, %s, %s, %s \n%s\n", 
           r.getCafeName(), r.getCustomer(), r.getStarRate(), r.getCreatedDate(),
           r.getTimeFormFromToday(), r.getViewCount(), r.getContent());
@@ -48,14 +49,14 @@ public class ReviewHandler {
     System.out.println("저장하였습니다.");
   }
 
-  public void SelectStarRateReview() {
-    System.out.print("별점은? ");
-    int star = input.nextInt();
-    this.input.nextLine();
-    Review[] arr = reviewList.get(star);
-    for (Review r : arr) {
-      System.out.println(r.getCafeName());
-    }
-  }
+  //  public void SelectStarRateReview() {
+  //    System.out.print("별점은? ");
+  //    int star = input.nextInt();
+  //    this.input.nextLine();
+  //    Review[] arr = reviewList.get(star);
+  //    for (Review r : arr) {
+  //      System.out.println(r.getCafeName());
+  //    }
+  //  } 일단 막아놓자
 
 }

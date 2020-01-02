@@ -5,22 +5,23 @@ import ekgp49.dbc.domain.Search;
 
 public class SearchHandler {
   public Scanner input;
-  SearchList searchList;
-  
+  ArrayList searchList;
+
   public SearchHandler(Scanner input) {
     this.input = input;
-    searchList = new SearchList();
+    searchList = new ArrayList();
   }
-  
+
   public SearchHandler(Scanner input, int capacity) {
     this.input = input;
-    searchList = new SearchList(capacity);
+    searchList = new ArrayList(capacity);
   }
-  
+
   public void listSearch() {
     System.out.println("검색 키워드");
-    Search[] arr = searchList.toArray();
-    for(Search s : arr) {
+    Object[] arr = searchList.toArray();
+    for(Object obj : arr) {
+      Search s = (Search) obj;
       System.out.printf("%s, %s, %s, %s\n", 
           s.getCafeArea(), s.getCafeName(), s.getCafeMenu(), s.getStarRate());
     }
@@ -38,7 +39,7 @@ public class SearchHandler {
     search.setStarRate(this.input.nextLine());
 
     searchList.add(search);
-    
+
     System.out.println("저장하였습니다.");
   }
 
