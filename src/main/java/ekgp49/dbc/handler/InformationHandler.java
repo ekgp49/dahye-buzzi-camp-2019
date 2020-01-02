@@ -4,19 +4,22 @@ import java.util.Scanner;
 import ekgp49.dbc.domain.Information;
 
 public class InformationHandler {
-  static final int INFORMATION_SIZE = 100;
-
   public Scanner input;
-  Information[] informations = new Information[INFORMATION_SIZE];
-  int informationsCount = 0;
- 
+  InformationList informationList;
+  
   public InformationHandler(Scanner input) {
     this.input = input;
+    informationList = new InformationList();
+  }
+  
+  public InformationHandler(Scanner input, int capacity) {
+    this.input = input;
+    informationList = new InformationList(capacity);
   }
   
   public void listInformaition() {
-    for(int i = 0; i < this.informationsCount; i++) {
-      Information info = this.informations[i];
+    Information[] arr = informationList.toArray();
+    for(Information info : arr) {
       System.out.printf("%s, %s, %s, %s, %s ~ %s, %s, %s, %s\n", 
       info.getCafeName(), info.getCafeAddress(), info.getCafeCall(),
       info.getCafeWebSite(), info.getOpenTime(), 
@@ -45,7 +48,7 @@ public class InformationHandler {
     System.out.print("별점은? : ");
     information.setStarRate(this.input.nextLine());
    
-    this.informations[this.informationsCount++] = information;
+    this.informationList.add(information);
     System.out.println("저장하였습니다.");
   }
 

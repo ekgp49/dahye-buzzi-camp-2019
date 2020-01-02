@@ -5,20 +5,23 @@ import java.util.Scanner;
 import ekgp49.dbc.domain.Review;
 
 public class ReviewHandler {
-  static final int REVIEW_SIZE = 100;
-
   public Scanner input;
-  Review[] reviews = new Review[REVIEW_SIZE];
-  int reviewsCount = 0;
+  ReviewList reviewList;
 
   public ReviewHandler(Scanner input) {
     this.input = input;
+    reviewList = new ReviewList();
   }
-  
+
+  public ReviewHandler(Scanner input, int capacity) {
+    this.input = input;
+    reviewList = new ReviewList(capacity);
+  }
+
   public void listReview() {
     System.out.println("리뷰");
-    for(int i = 0; i < reviewsCount; i++) {
-      Review r = this.reviews[i];
+    Review[] arr = reviewList.toArray();
+    for(Review r : arr) {
       System.out.printf("%s, %s, %s, %s, %s, %s \n%s\n", 
           r.getCafeName(), r.getCustomer(), r.getStarRate(), r.getCreatedDate(),
           r.getTimeFormFromToday(), r.getViewCount(), r.getContent());
@@ -41,7 +44,7 @@ public class ReviewHandler {
     review.setTimeFormFromToday(String.format("%1$tp %1$tH:%1$tM:%1$tS ", new java.util.Date()));
     review.setViewCount(0);
 
-    this.reviews[this.reviewsCount++] = review;
+    reviewList.add(review);
     System.out.println("저장하였습니다.");
   }
 
@@ -49,10 +52,9 @@ public class ReviewHandler {
     System.out.print("별점은? ");
     int star = input.nextInt();
     this.input.nextLine();
-    for(int i = 0; i < this.reviewsCount; i++) {
-      if (star == this.reviews[i].getStarRate()) {
-        System.out.println(this.reviews[i].getCafeName());
-      }
+    Review[] arr = reviewList.get(star);
+    for (Review r : arr) {
+      System.out.println(r.getCafeName());
     }
   }
 
