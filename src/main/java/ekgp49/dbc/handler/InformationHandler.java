@@ -2,25 +2,26 @@ package ekgp49.dbc.handler;
 
 import java.util.Scanner;
 import ekgp49.dbc.domain.Information;
+import util.ArrayList;
 
 public class InformationHandler {
   public Scanner input;
-  ArrayList informationList;
+  ArrayList<Information> informationList;
 
   public InformationHandler(Scanner input) {
     this.input = input;
-    informationList = new ArrayList();
+    informationList = new ArrayList<>();
   }
 
   public InformationHandler(Scanner input, int capacity) {
     this.input = input;
-    informationList = new ArrayList(capacity);
+    informationList = new ArrayList<>(capacity);
   }
 
   public void listInformaition() {
-    Object[] arr = informationList.toArray();
-    for(Object obj : arr) {
-      Information info = (Information) obj;
+    Information[] arr = new Information[this.informationList.getSize()];
+    informationList.toArray(arr);
+    for(Information info : arr) {
       System.out.printf("%s, %s, %s, %s, %s ~ %s, %s, %s, %s\n", 
           info.getCafeName(), info.getCafeAddress(), info.getCafeCall(),
           info.getCafeWebSite(), info.getOpenTime(), 

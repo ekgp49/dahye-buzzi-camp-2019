@@ -3,26 +3,26 @@ package ekgp49.dbc.handler;
 import java.sql.Date;
 import java.util.Scanner;
 import ekgp49.dbc.domain.Review;
+import util.ArrayList;
 
 public class ReviewHandler {
   public Scanner input;
-  ArrayList reviewList;
+  ArrayList<Review> reviewList;
 
   public ReviewHandler(Scanner input) {
     this.input = input;
-    reviewList = new ArrayList();
+    reviewList = new ArrayList<>();
   }
 
   public ReviewHandler(Scanner input, int capacity) {
     this.input = input;
-    reviewList = new ArrayList(capacity);
+    reviewList = new ArrayList<>(capacity);
   }
 
   public void listReview() {
     System.out.println("리뷰");
-    Object[] arr = reviewList.toArray();
-    for(Object obj : arr) {
-      Review r = (Review) obj;
+    Review[] arr = reviewList.toArray(new Review[] {});
+    for(Review r : arr) {
       System.out.printf("%s, %s, %s, %s, %s, %s \n%s\n", 
           r.getCafeName(), r.getCustomer(), r.getStarRate(), r.getCreatedDate(),
           r.getTimeFormFromToday(), r.getViewCount(), r.getContent());

@@ -2,26 +2,26 @@ package ekgp49.dbc.handler;
 
 import java.util.Scanner;
 import ekgp49.dbc.domain.Search;
+import util.ArrayList;
 
 public class SearchHandler {
   public Scanner input;
-  ArrayList searchList;
+  ArrayList<Search> searchList;
 
   public SearchHandler(Scanner input) {
     this.input = input;
-    searchList = new ArrayList();
+    searchList = new ArrayList<>();
   }
 
   public SearchHandler(Scanner input, int capacity) {
     this.input = input;
-    searchList = new ArrayList(capacity);
+    searchList = new ArrayList<>(capacity);
   }
 
   public void listSearch() {
     System.out.println("검색 키워드");
-    Object[] arr = searchList.toArray();
-    for(Object obj : arr) {
-      Search s = (Search) obj;
+    Search[] arr = searchList.toArray(new Search[this.searchList.getSize()]);
+    for(Search s : arr) {
       System.out.printf("%s, %s, %s, %s\n", 
           s.getCafeArea(), s.getCafeName(), s.getCafeMenu(), s.getStarRate());
     }

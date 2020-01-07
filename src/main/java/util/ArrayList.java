@@ -1,7 +1,7 @@
-package ekgp49.dbc.handler;
+package util;
 import java.util.Arrays;
 
-public class ArrayList {
+public class ArrayList<E> {
   static final int DEFAULT_SIZE = 3;
   Object[] list;
   int size;
@@ -18,11 +18,18 @@ public class ArrayList {
     }
   }
 
-  public Object[] toArray() {
-    return Arrays.copyOf(this.list, this.size);
+  @SuppressWarnings("unchecked")
+  public E[] toArray(E[] arr) {
+    if (arr.length < this.size) {
+      return (E[])Arrays.copyOf(this.list, this.size, arr.getClass());
+    }
+   
+    System.arraycopy(this.list, 0, arr, 0, this.size);
+    
+    return arr;
   }
 
-  public void add(Object obj) {
+  public void add(E obj) {
     if (this.size == this.list.length) {
       int oldCapacity = this.list.length;
       int newCapacity = oldCapacity + (oldCapacity >> 1);
@@ -30,15 +37,9 @@ public class ArrayList {
     }
     this.list[this.size++] = obj;
   }
+  
+  public int getSize() {
+    return this.size;
+  }
 
-  //  public Review[] get(int star) {
-  //    Review[] arr = new Review[size];
-  //    int count = 0;
-  //    for (int i = 0; i < size; i++) {
-  //      if (list[i].getStarRate() == star) {
-  //        arr[count++] = list[i];
-  //      }
-  //    }
-  //    return Arrays.copyOf(arr, count);
-  //  } 일단 막아놓자
 }
