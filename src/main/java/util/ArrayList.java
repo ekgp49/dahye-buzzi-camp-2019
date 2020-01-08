@@ -38,8 +38,45 @@ public class ArrayList<E> {
     this.list[this.size++] = obj;
   }
   
-  public int getSize() {
+  public int size() {
     return this.size;
+  }
+
+  @SuppressWarnings("unchecked")
+  public E get(int index) {
+    if (index < 0 || index >= this.size)
+      return null;
+    
+    return (E)list[index];
+  }
+
+  @SuppressWarnings("unchecked")
+  public E set(E obj, int index) {
+    
+    if (index < 0 || index >= this.size)
+      return null;
+    
+    this.list[index] = obj;
+    E old = (E) this.list[index];
+    
+    return old;
+  }
+
+  @SuppressWarnings("unchecked")
+  public E remove(int index) {
+    if (index < 0 || index >= this.size)
+      return null;
+  
+    E old = (E) this.list[index];
+   
+    for (int i = index + 1; i < this.size; i++) {
+      this.list[i-1] = this.list[i];
+    }
+   
+    size--;
+    this.list[size] = null;
+   
+    return old;
   }
 
 }

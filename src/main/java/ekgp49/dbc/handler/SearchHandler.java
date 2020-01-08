@@ -20,7 +20,7 @@ public class SearchHandler {
 
   public void listSearch() {
     System.out.println("검색 키워드");
-    Search[] arr = searchList.toArray(new Search[this.searchList.getSize()]);
+    Search[] arr = searchList.toArray(new Search[this.searchList.size()]);
     for(Search s : arr) {
       System.out.printf("%s, %s, %s, %s\n", 
           s.getCafeArea(), s.getCafeName(), s.getCafeMenu(), s.getStarRate());
@@ -42,5 +42,4 @@ public class SearchHandler {
 
     System.out.println("저장하였습니다.");
   }
-
 }

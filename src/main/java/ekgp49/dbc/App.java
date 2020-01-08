@@ -19,11 +19,9 @@ public class App {
       command = keyboard.nextLine();
    
       switch (command) {
-        case "/search/add":
-          search.addSearch();
-          break;
         case "/search/list":
-          search.listSearch();
+          search.listSearch(); // 이거 하면 검색 키워드 선택하게 하고 
+                               //=> 검색 키워드 선택한 대로 information에서 찾아서 쫙 보여줄거임
           break;
         case "/information/add":
           information.addInformation();
@@ -31,15 +29,27 @@ public class App {
         case "/information/list":
           information.listInformaition();
           break;
+        case "/information/update":
+          information.updateInformation();
+          break;
+        case "/information/delete":
+          information.deleteInformaition();
+          break;
         case "/review/add":
           review.addReview();
           break;
         case "/review/list":
           review.listReview();
           break;
-//        case "/review/star":
-//          review.SelectStarRateReview();
-//          break; 일단은 막아놓자
+        case "/review/update":
+          review.updateReview();
+          break;
+        case "/review/delete":
+          review.deleteReview();
+          break;
+        case "/review/star":
+          review.SelectStarRateReview();
+          break;
         default:
           if (!command.equalsIgnoreCase("quit")) {
             System.out.println("실행할 수 없는 명령입니다.");

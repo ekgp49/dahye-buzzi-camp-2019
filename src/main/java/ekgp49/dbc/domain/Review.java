@@ -3,6 +3,7 @@ package ekgp49.dbc.domain;
 import java.sql.Date;
 
 public class Review {
+  private int no;
   private String cafeName;
   private String customer;
   private int starRate;
@@ -11,6 +12,12 @@ public class Review {
   private Date createdDate; 
   private String timeFormFromToday;
 
+  public int getNo() {
+    return no;
+  }
+  public void setNo(int no) {
+    this.no = no;
+  }
   public String getCafeName() {
     return cafeName;
   }

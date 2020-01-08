@@ -1,6 +1,7 @@
 package ekgp49.dbc.domain;
 
 public class Information {
+  private int no; 
   private String cafeName;
   private String cafeAddress;
   private String cafeCall;
@@ -9,8 +10,13 @@ public class Information {
   private String closeTime;
   private String holliday; 
   private String cafeMenu;
-  private String starRate;
   
+  public int getNo() {
+    return no;
+  }
+  public void setNo(int no) {
+    this.no = no;
+  }
   public String getCafeName() {
     return cafeName;
   }
@@ -58,12 +64,6 @@ public class Information {
   }
   public void setCafeMenu(String cafeMenu) {
     this.cafeMenu = cafeMenu;
-  }
-  public String getStarRate() {
-    return starRate;
-  }
-  public void setStarRate(String starRate) {
-    this.starRate = starRate;
   }
   
 }
