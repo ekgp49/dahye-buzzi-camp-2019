@@ -4,14 +4,16 @@ import java.util.Scanner;
 import ekgp49.dbc.handler.InformationHandler;
 import ekgp49.dbc.handler.ReviewHandler;
 import ekgp49.dbc.handler.SearchHandler;
+import util.Prompt;
 public class App {
   static Scanner keyboard = new Scanner(System.in);
   
   public static void main(String[] args) {
+    Prompt prompt = new Prompt(keyboard);
     
-    SearchHandler search = new SearchHandler(keyboard);
-    ReviewHandler review = new ReviewHandler(keyboard);
-    InformationHandler information = new InformationHandler(keyboard);
+    SearchHandler search = new SearchHandler(prompt);
+    ReviewHandler review = new ReviewHandler(prompt);
+    InformationHandler information = new InformationHandler(prompt);
     
     String command; 
     do {
@@ -23,16 +25,16 @@ public class App {
           search.listSearch(); // 이거 하면 검색 키워드 선택하게 하고 
                                //=> 검색 키워드 선택한 대로 information에서 찾아서 쫙 보여줄거임
           break;
-        case "/information/add":
+        case "/info/add":
           information.addInformation();
           break;
-        case "/information/list":
+        case "/info/list":
           information.listInformaition();
           break;
-        case "/information/update":
+        case "/info/update":
           information.updateInformation();
           break;
-        case "/information/delete":
+        case "/info/delete":
           information.deleteInformaition();
           break;
         case "/review/add":

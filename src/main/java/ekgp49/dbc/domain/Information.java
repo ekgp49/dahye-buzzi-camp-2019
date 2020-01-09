@@ -8,6 +8,74 @@ public class Information {
   private String cafeWebSite; 
   private String openTime;
   private String closeTime;
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((cafeAddress == null) ? 0 : cafeAddress.hashCode());
+    result = prime * result + ((cafeCall == null) ? 0 : cafeCall.hashCode());
+    result = prime * result + ((cafeMenu == null) ? 0 : cafeMenu.hashCode());
+    result = prime * result + ((cafeName == null) ? 0 : cafeName.hashCode());
+    result = prime * result + ((cafeWebSite == null) ? 0 : cafeWebSite.hashCode());
+    result = prime * result + ((closeTime == null) ? 0 : closeTime.hashCode());
+    result = prime * result + ((holliday == null) ? 0 : holliday.hashCode());
+    result = prime * result + no;
+    result = prime * result + ((openTime == null) ? 0 : openTime.hashCode());
+    return result;
+  }
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    Information other = (Information) obj;
+    if (cafeAddress == null) {
+      if (other.cafeAddress != null)
+        return false;
+    } else if (!cafeAddress.equals(other.cafeAddress))
+      return false;
+    if (cafeCall == null) {
+      if (other.cafeCall != null)
+        return false;
+    } else if (!cafeCall.equals(other.cafeCall))
+      return false;
+    if (cafeMenu == null) {
+      if (other.cafeMenu != null)
+        return false;
+    } else if (!cafeMenu.equals(other.cafeMenu))
+      return false;
+    if (cafeName == null) {
+      if (other.cafeName != null)
+        return false;
+    } else if (!cafeName.equals(other.cafeName))
+      return false;
+    if (cafeWebSite == null) {
+      if (other.cafeWebSite != null)
+        return false;
+    } else if (!cafeWebSite.equals(other.cafeWebSite))
+      return false;
+    if (closeTime == null) {
+      if (other.closeTime != null)
+        return false;
+    } else if (!closeTime.equals(other.closeTime))
+      return false;
+    if (holliday == null) {
+      if (other.holliday != null)
+        return false;
+    } else if (!holliday.equals(other.holliday))
+      return false;
+    if (no != other.no)
+      return false;
+    if (openTime == null) {
+      if (other.openTime != null)
+        return false;
+    } else if (!openTime.equals(other.openTime))
+      return false;
+    return true;
+  }
   private String holliday; 
   private String cafeMenu;
   

@@ -1,42 +1,33 @@
 package ekgp49.dbc.handler;
 
-import java.util.Scanner;
 import ekgp49.dbc.domain.Search;
 import util.ArrayList;
+import util.Prompt;
 
 public class SearchHandler {
-  public Scanner input;
+  Prompt prompt;
   ArrayList<Search> searchList;
 
-  public SearchHandler(Scanner input) {
-    this.input = input;
+  public SearchHandler(Prompt prompt) {
+    this.prompt = prompt;
     searchList = new ArrayList<>();
   }
 
-  public SearchHandler(Scanner input, int capacity) {
-    this.input = input;
+  public SearchHandler(Prompt prompt, int capacity) {
+    this.prompt = prompt;
     searchList = new ArrayList<>(capacity);
   }
 
   public void listSearch() {
     System.out.println("검색 키워드");
-    Search[] arr = searchList.toArray(new Search[this.searchList.size()]);
-    for(Search s : arr) {
-      System.out.printf("%s, %s, %s, %s\n", 
-          s.getCafeArea(), s.getCafeName(), s.getCafeMenu(), s.getStarRate());
-    }
   }
 
   public void addSearch() {
     Search search = new Search();
-    System.out.print("지역은? : ");
-    search.setCafeArea(this.input.nextLine());
-    System.out.print("카페 상호는? : ");
-    search.setCafeName(this.input.nextLine());    
-    System.out.print("메뉴는? : ");
-    search.setCafeMenu(this.input.nextLine());
-    System.out.print("별점은? : ");
-    search.setStarRate(this.input.nextLine());
+    search.setCafeArea(prompt.inputString("지역: "));
+    search.setCafeName(prompt.inputString("카페 상호: "));    
+    search.setCafeMenu(prompt.inputString("메뉴: "));
+    search.setStarRate(prompt.inputInt("별점: "));
 
     searchList.add(search);
 

@@ -1,21 +1,21 @@
 package ekgp49.dbc.handler;
 
-import java.util.Scanner;
 import ekgp49.dbc.domain.Information;
 import util.ArrayList;
+import util.Prompt;
 
 public class InformationHandler {
-  public Scanner input;
+  Prompt prompt;
   ArrayList<Information> informationList;
-  private static int no = 1;
+  private int no = 1;
 
-  public InformationHandler(Scanner input) {
-    this.input = input;
+  public InformationHandler(Prompt prompt) {
+    this.prompt = prompt;
     this.informationList = new ArrayList<>();
   }
 
-  public InformationHandler(Scanner input, int capacity) {
-    this.input = input;
+  public InformationHandler(Prompt prompt, int capacity) {
+    this.prompt = prompt;
     this.informationList = new ArrayList<>(capacity);
   }
 
@@ -32,33 +32,22 @@ public class InformationHandler {
 
   public void addInformation() {
     Information information = new Information();
-    information.setNo(no++);
-    System.out.print("카페 상호는? : ");
-    information.setCafeName(this.input.nextLine());
-    System.out.print("주소는? : ");
-    information.setCafeAddress(this.input.nextLine());
-    System.out.print("연락처는? : ");
-    information.setCafeCall(this.input.nextLine());
-    System.out.print("웹사이트는? : ");
-    information.setCafeWebSite(this.input.nextLine());
-    System.out.print("오픈시간은? : ");
-    information.setOpenTime(this.input.nextLine());
-    System.out.print("종료시간은? : ");
-    information.setCloseTime(this.input.nextLine());
-    System.out.print("정기 휴일은? : ");
-    information.setHolliday(this.input.nextLine());
-    System.out.print("메뉴는? : ");
-    information.setCafeMenu(this.input.nextLine());
+    information.setNo(this.no++);
+    information.setCafeName(prompt.inputString("카페 상호: "));
+    information.setCafeAddress(prompt.inputString("주소: "));
+    information.setCafeCall(prompt.inputString("연락처: "));
+    information.setCafeWebSite(prompt.inputString("웹사이트: "));
+    information.setOpenTime(prompt.inputString("오픈시간: "));
+    information.setCloseTime(prompt.inputString("종료시간: "));
+    information.setHolliday(prompt.inputString("정기 휴일: "));
+    information.setCafeMenu(prompt.inputString("메뉴: "));
 
     this.informationList.add(information);
     System.out.println("저장하였습니다.");
   }
 
   public void updateInformation() {
-    System.out.println("가게 정보 번호는? ");
-    int no = this.input.nextInt();
-    input.nextLine();
-    int index = -1;
+    int index = indexOfInfo(prompt.inputInt("가게 정보 번호: "));
     
     for (int i = 0; i < this.informationList.size(); i++) {
       if (this.informationList.get(i).getNo() == no) {
@@ -73,95 +62,64 @@ public class InformationHandler {
 
     Information old = informationList.get(index);
 
-    System.out.println("수정할 영역을 입력하세요.");
-    System.out.println("1 : 상호, 2: 주소, 3: 연락처, 4: 웹사이트, 5: 오픈시간");
-    System.out.println("6 : 종료시간, 7: 정기 휴일, 8: 메뉴, 9: 전체");
-    System.out.print("입력 >> ");
-
-    int command = input.nextInt();
-    input.nextLine();
+    int command = prompt.inputInt("수정할 영역을 입력하세요.\n"
+        + "1 : 상호, 2: 주소, 3: 연락처, 4: 웹사이트, 5: 오픈시간\n"
+        + "6 : 종료시간, 7: 정기 휴일, 8: 메뉴, 9: 전체\n"
+        + "입력 >> ");
 
     switch(command) {
       case 1 : 
-        System.out.print("카페 상호: ");
-        old.setCafeName(this.input.nextLine());
+        old.setCafeName(prompt.inputString("카페 상호: "));
         System.out.println("수정했습니다.");
         break;
       case 2:
-        System.out.print("주소: ");
-        old.setCafeAddress(this.input.nextLine());
+        old.setCafeAddress(prompt.inputString("주소: "));
         System.out.println("수정했습니다.");
         break;
       case 3:
-        System.out.print("연락처: ");
-        old.setCafeCall(this.input.nextLine());
+        old.setCafeCall(prompt.inputString("연락처: "));
         System.out.println("수정했습니다.");
         break;
       case 4:
-        System.out.print("웹사이트: ");
-        old.setCafeWebSite(this.input.nextLine());
+        old.setCafeWebSite(prompt.inputString("웹사이트: "));
         System.out.println("수정했습니다.");
         break;
       case 5:
-        System.out.print("오픈시간: ");
-        old.setOpenTime(this.input.nextLine());
+        old.setOpenTime(prompt.inputString("오픈시간: "));
         System.out.println("수정했습니다.");
         break;
       case 6:
-        System.out.print("종료시간: ");
-        old.setCloseTime(this.input.nextLine());
+        old.setCloseTime(prompt.inputString("종료시간: "));
         System.out.println("수정했습니다.");
         break;
       case 7:
-        System.out.print("정기 휴일은: ");
-        old.setHolliday(this.input.nextLine());
+        old.setHolliday(prompt.inputString("정기 휴일: "));
         System.out.println("수정했습니다.");
         break;
       case 8:
-        System.out.print("메뉴는: ");
-        old.setCafeMenu(this.input.nextLine());
+        old.setCafeMenu(prompt.inputString("메뉴: "));
         System.out.println("수정했습니다.");
         break;
       case 9:
-        System.out.print("카페 상호는: ");
-        old.setCafeName(this.input.nextLine());
-        System.out.print("주소는: ");
-        old.setCafeAddress(this.input.nextLine());
-        System.out.print("연락처는: ");
-        old.setCafeCall(this.input.nextLine());
-        System.out.print("웹사이트는: ");
-        old.setCafeWebSite(this.input.nextLine());
-        System.out.print("오픈시간은: ");
-        old.setOpenTime(this.input.nextLine());
-        System.out.print("종료시간은: ");
-        old.setCloseTime(this.input.nextLine());
-        System.out.print("정기 휴일은: ");
-        old.setHolliday(this.input.nextLine());
-        System.out.print("메뉴는: ");
-        old.setCafeMenu(this.input.nextLine());
+        old.setCafeName(prompt.inputString("카페 상호: "));
+        old.setCafeAddress(prompt.inputString("주소: "));
+        old.setCafeCall(prompt.inputString("연락처: "));
+        old.setCafeWebSite(prompt.inputString("웹사이트: "));
+        old.setOpenTime(prompt.inputString("오픈시간: "));
+        old.setCloseTime(prompt.inputString("종료시간: "));
+        old.setHolliday(prompt.inputString("정기 휴일: "));
+        old.setCafeMenu(prompt.inputString("메뉴: "));
         System.out.println("수정했습니다.");
         break;
       default : 
         System.out.println("유효한 입력이 아닙니다.");
     }
 
-
     this.informationList.set(old, index);
-    System.out.println("저장하였습니다.");
   }
 
   public void deleteInformaition() {
-    System.out.println("가게 정보 번호는? ");
-    int no = this.input.nextInt();
-    input.nextLine();
-    int index = -1;
-    
-    for (int i = 0; i < this.informationList.size(); i++) {
-      if (this.informationList.get(i).getNo() == no) {
-        index = i;
-        break;
-      }
-    }
+    int index = indexOfInfo(prompt.inputInt("가게 정보 번호: "));
     if (index == -1) {
       System.out.println("해당 번호의 정보가 없습니다.");
       return;
@@ -171,6 +129,13 @@ public class InformationHandler {
     System.out.println("정보를 삭제했습니다.");
   }
   
-  
+  private int indexOfInfo(int no) {
+    for (int i = 0; i < this.informationList.size(); i++) {
+      if (this.informationList.get(i).getNo() == no) {
+        return i;
+      }
+    }
+    return -1;
+  }
 
 }

@@ -4,7 +4,7 @@ public class Search {
   private String cafeArea;
   private String cafeName;
   private String cafeMenu; 
-  private String starRate;
+  private int starRate;
   
   public String getCafeArea() {
     return cafeArea;
@@ -24,10 +24,10 @@ public class Search {
   public void setCafeMenu(String cafeMenu) {
     this.cafeMenu = cafeMenu;
   }
-  public String getStarRate() {
+  public int getStarRate() {
     return starRate;
   }
-  public void setStarRate(String starRate) {
+  public void setStarRate(int starRate) {
     this.starRate = starRate;
   }
   
