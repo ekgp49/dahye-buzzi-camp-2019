@@ -1,21 +1,16 @@
 package ekgp49.dbc.handler;
 
 import ekgp49.dbc.domain.Search;
-import util.ArrayList;
+import util.LinkedList;
 import util.Prompt;
 
 public class SearchHandler {
   Prompt prompt;
-  ArrayList<Search> searchList;
+  LinkedList<Search> searchList;
 
   public SearchHandler(Prompt prompt) {
     this.prompt = prompt;
-    searchList = new ArrayList<>();
-  }
-
-  public SearchHandler(Prompt prompt, int capacity) {
-    this.prompt = prompt;
-    searchList = new ArrayList<>(capacity);
+    searchList = new LinkedList<>();
   }
 
   public void listSearch() {
