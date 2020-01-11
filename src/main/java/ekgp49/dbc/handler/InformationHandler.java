@@ -15,8 +15,10 @@ public class InformationHandler {
   }
 
   public void listInformaition() {
-    Information[] arr = new Information[this.informationList.size()];
-    this.informationList.toArray(arr);
+    if (this.informationList.size() == 0) {
+      return;
+    }
+    Information[] arr = this.informationList.toArray(new Information[] {});
     for(Information info : arr) {
       System.out.printf("%s, %s, %s, %s, %s ~ %s, %s, %s\n", 
           info.getCafeName(), info.getCafeAddress(), info.getCafeCall(),
@@ -120,7 +122,7 @@ public class InformationHandler {
       return;
     }
     
-    informationList.remove(index);
+    this.informationList.remove(index);
     System.out.println("정보를 삭제했습니다.");
   }
   
@@ -132,5 +134,5 @@ public class InformationHandler {
     }
     return -1;
   }
-
+  
 }

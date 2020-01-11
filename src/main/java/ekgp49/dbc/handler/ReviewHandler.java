@@ -18,6 +18,9 @@ public class ReviewHandler {
 
   public void listReview() {
     System.out.println("리뷰");
+    if (this.reviewList.size() == 0) {
+      return;
+    }
     Review[] arr = reviewList.toArray(new Review[] {});
     for(Review r : arr) {
       System.out.printf("%d, %s, %s, %s, %s, %s, %s \n%s\n", 

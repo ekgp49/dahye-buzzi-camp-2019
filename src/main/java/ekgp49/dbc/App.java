@@ -21,9 +21,10 @@ public class App {
       command = keyboard.nextLine();
    
       switch (command) {
-        case "/search/list":
-          search.listSearch(); // 이거 하면 검색 키워드 선택하게 하고 
+        case "/search":
+          search.keySearch(information); // 이거 하면 검색 키워드 선택하게 하고 
                                //=> 검색 키워드 선택한 대로 information에서 찾아서 쫙 보여줄거임
+          // App에서 만든 InformationHandler 객체를 넘겨줘야 그 객체에 저장된 informationList 객체를 이용할 수 있다
           break;
         case "/info/add":
           information.addInformation();

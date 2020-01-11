@@ -8,6 +8,8 @@ public class Information {
   private String cafeWebSite; 
   private String openTime;
   private String closeTime;
+  private String holliday; 
+  private String cafeMenu;
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -76,8 +78,6 @@ public class Information {
       return false;
     return true;
   }
-  private String holliday; 
-  private String cafeMenu;
   
   public int getNo() {
     return no;
