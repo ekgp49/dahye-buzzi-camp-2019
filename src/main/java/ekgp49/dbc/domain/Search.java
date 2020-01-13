@@ -55,25 +55,31 @@ public class Search {
     return cafeArea;
   }
   public void setCafeArea(String cafeArea) {
-    this.cafeArea = cafeArea;
+    if (cafeArea != "") {
+      this.cafeArea = cafeArea;
+    }
   }
   public String getCafeName() {
     return cafeName;
   }
   public void setCafeName(String cafeName) {
-    this.cafeName = cafeName;
+    if (cafeName != "") {
+      this.cafeName = cafeName;
+    }
   }
   public String getCafeMenu() {
     return cafeMenu;
   }
   public void setCafeMenu(String cafeMenu) {
-    this.cafeMenu = cafeMenu;
+    if (cafeMenu != "") {
+      this.cafeMenu = cafeMenu;
+    }
   }
   public int getStarRate() {
     return starRate;
   }
   public void setStarRate(int starRate) {
-    this.starRate = starRate;
+      this.starRate = starRate;
   }
   
 }
