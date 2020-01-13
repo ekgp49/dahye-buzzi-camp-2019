@@ -5,10 +5,12 @@ import ekgp49.dbc.handler.InformationHandler;
 import ekgp49.dbc.handler.ReviewHandler;
 import ekgp49.dbc.handler.SearchHandler;
 import util.Prompt;
+import util.Queue;
 import util.Stack;
 public class App {
   static Scanner keyboard = new Scanner(System.in);
   static Stack<String> commandStack = new Stack<>();
+  static Queue<String> commandQueue = new Queue<>();
 
   public static void main(String[] args) {
     Prompt prompt = new Prompt(keyboard);
@@ -24,6 +26,7 @@ public class App {
 
       if (command != "") {
         commandStack.push(command);
+        commandQueue.offer(command);
       }
 
       switch (command) {
@@ -62,6 +65,9 @@ public class App {
         case "history" :
           printCommandHistory();
           break;
+        case "history2" :
+          printCommandHistory2();
+          break;
         default:
           if (!command.equalsIgnoreCase("quit")) {
             System.out.println("실행할 수 없는 명령입니다.");
@@ -88,4 +94,19 @@ public class App {
     }
   }
 
+  private static void printCommandHistory2() {
+    Queue<String> historyQueue = commandQueue.clone();
+    System.out.println("명령 목록 출력!");
+    int count = 0;
+    while (historyQueue.size() > 0) {
+      System.out.println(historyQueue.poll());
+      if ((++count % 5) == 0 && historyQueue.size() > 0) {
+        System.out.print(":");
+        String str = keyboard.nextLine();
+        if (str.equalsIgnoreCase("q")) {
+          break;
+        }
+      }
+    }
+  }
 }
