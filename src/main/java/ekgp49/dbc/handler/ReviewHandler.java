@@ -7,9 +7,9 @@ import util.LinkedList;
 import util.Prompt;
 
 public class ReviewHandler {
+  Prompt prompt;
   LinkedList<Review> reviewList;
   private int no = 1;
-  Prompt prompt;
 
   public ReviewHandler(Prompt prompt) {
     this.prompt = prompt;
