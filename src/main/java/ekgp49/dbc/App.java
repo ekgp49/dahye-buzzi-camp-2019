@@ -4,6 +4,8 @@ import java.util.Scanner;
 import ekgp49.dbc.handler.InformationHandler;
 import ekgp49.dbc.handler.ReviewHandler;
 import ekgp49.dbc.handler.SearchHandler;
+import util.ArrayList;
+import util.LinkedList;
 import util.Prompt;
 import util.Queue;
 import util.Stack;
@@ -11,13 +13,12 @@ public class App {
   static Scanner keyboard = new Scanner(System.in);
   static Stack<String> commandStack = new Stack<>();
   static Queue<String> commandQueue = new Queue<>();
-
   public static void main(String[] args) {
     Prompt prompt = new Prompt(keyboard);
 
     SearchHandler search = new SearchHandler(prompt);
-    ReviewHandler review = new ReviewHandler(prompt);
-    InformationHandler information = new InformationHandler(prompt);
+    ReviewHandler review = new ReviewHandler(prompt, new LinkedList<>());
+    InformationHandler information = new InformationHandler(prompt, new ArrayList<>());
 
     String command; 
     do {

@@ -44,14 +44,14 @@ public class SearchHandler {
         arr[index++] = info[i];
       }
     }
-    if (arr.length == 0) {
+    if (index == 0) {
       System.out.println("검색 결과가 없습니다.");
       return;
     }
     for(Information i : Arrays.copyOf(arr, index)) {
-      System.out.printf("상호: %s, 주소: %s, 연락처: %s, "
+      System.out.printf("주소: %s, 상호: %s, 연락처: %s, "
           + "웹사이트: %s, %s시 ~ %s시, 휴일: %s, 메뉴: %s\n", 
-          i.getCafeName(), i.getCafeAddress(), i.getCafeCall(),
+          i.getCafeAddress(), i.getCafeName(), i.getCafeCall(),
           i.getCafeWebSite(), i.getOpenTime(), 
           i.getCloseTime(), i.getHolliday(), i.getCafeMenu());
     }

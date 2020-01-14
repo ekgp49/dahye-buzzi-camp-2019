@@ -3,17 +3,17 @@ package ekgp49.dbc.handler;
 import java.sql.Date;
 import java.util.Arrays;
 import ekgp49.dbc.domain.Review;
-import util.LinkedList;
+import util.AbstractList;
 import util.Prompt;
 
 public class ReviewHandler {
   Prompt prompt;
-  LinkedList<Review> reviewList;
+  AbstractList<Review> reviewList;
   private int no = 1;
 
-  public ReviewHandler(Prompt prompt) {
+  public ReviewHandler(Prompt prompt, AbstractList<Review> list) {
     this.prompt = prompt;
-    reviewList = new LinkedList<>();
+    reviewList = list;
   }
 
   public void listReview() {
@@ -72,7 +72,7 @@ public class ReviewHandler {
     review.setViewCount(old.getViewCount());
 
     if (!review.equals(old)) {
-      this.reviewList.set(index, review);
+      this.reviewList.set(review, index);
       System.out.println("리뷰를 수정했습니다.");
     } else {
       System.out.println("리뷰 변경을 취소했습니다.");

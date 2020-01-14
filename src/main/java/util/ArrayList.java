@@ -1,10 +1,9 @@
 package util;
 import java.util.Arrays;
 
-public class ArrayList<E> {
+public class ArrayList<E> extends AbstractList<E> {
   static final int DEFAULT_SIZE = 3;
   Object[] list;
-  int size;
 
   public ArrayList() {
     this.list = new Object[DEFAULT_SIZE];
@@ -17,7 +16,7 @@ public class ArrayList<E> {
       this.list = new Object[capacity];
     }
   }
-
+  @Override
   @SuppressWarnings("unchecked")
   public E[] toArray(E[] arr) {
     if (arr.length < this.size) {
@@ -28,7 +27,7 @@ public class ArrayList<E> {
     
     return arr;
   }
-
+  @Override
   public void add(E obj) {
     if (this.size == this.list.length) {
       int oldCapacity = this.list.length;
@@ -37,11 +36,7 @@ public class ArrayList<E> {
     }
     this.list[this.size++] = obj;
   }
-  
-  public int size() {
-    return this.size;
-  }
-
+  @Override
   @SuppressWarnings("unchecked")
   public E get(int index) {
     if (index < 0 || index >= this.size)
@@ -49,7 +44,7 @@ public class ArrayList<E> {
     
     return (E)list[index];
   }
-
+  @Override
   @SuppressWarnings("unchecked")
   public E set(E obj, int index) {
     
@@ -61,7 +56,7 @@ public class ArrayList<E> {
     
     return old;
   }
-
+  @Override
   @SuppressWarnings("unchecked")
   public E remove(int index) {
     if (index < 0 || index >= this.size)
@@ -77,6 +72,26 @@ public class ArrayList<E> {
     this.list[size] = null;
    
     return old;
+  }
+
+  @Override
+  public void add(int index, E value) {
+    if (index < 0 || index > this.list.length) {
+      return;
+    }
+    if (size == this.list.length) {
+      int oldCapacity = list.length;
+      int newCapacity = oldCapacity + (oldCapacity >> 1);
+      list = Arrays.copyOf(list, newCapacity);
+    }
+    System.arraycopy(list, index, list, index + 1, size++ - index);
+    list[index] = value;
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public Object[] toArray() {
+    return (E[]) Arrays.copyOf(this.list, this.size);
   }
 
 }

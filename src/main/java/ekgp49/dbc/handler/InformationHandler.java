@@ -1,17 +1,17 @@
 package ekgp49.dbc.handler;
 
 import ekgp49.dbc.domain.Information;
-import util.LinkedList;
+import util.AbstractList;
 import util.Prompt;
 
 public class InformationHandler {
   Prompt prompt;
-  LinkedList<Information> informationList;
+  AbstractList<Information> informationList;
   private int no = 1;
 
-  public InformationHandler(Prompt prompt) {
+  public InformationHandler(Prompt prompt, AbstractList<Information> list) {
     this.prompt = prompt;
-    this.informationList = new LinkedList<>();
+    this.informationList = list;
   }
 
   public void listInformaition() {
@@ -112,7 +112,7 @@ public class InformationHandler {
         System.out.println("유효한 입력이 아닙니다.");
     }
 
-    this.informationList.set(index, old);
+    this.informationList.set(old, index);
   }
 
   public void deleteInformaition() {

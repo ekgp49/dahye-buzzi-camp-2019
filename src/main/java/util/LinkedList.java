@@ -2,14 +2,12 @@ package util;
 
 import java.lang.reflect.Array;
 
-public class LinkedList<E> {
+public class LinkedList<E> extends AbstractList<E>{
 
   Node<E> first;
 
   Node<E> last;
-
-  private int size;
-
+  @Override
   public void add(E value) {
     Node<E> newNode = new Node<>();
     newNode.value = value;
@@ -21,7 +19,7 @@ public class LinkedList<E> {
     }
     this.size++;
   }
-
+  @Override
   public void add(int index, E value) {
     if (index < 0 || index >= this.size) {
       return;
@@ -41,7 +39,7 @@ public class LinkedList<E> {
     }
     this.size++;
   }
-
+  @Override
   public E get(int index) {
     if (index < 0 || index >= this.size) {
       return null;
@@ -52,8 +50,8 @@ public class LinkedList<E> {
     }
     return cursor.value;
   }
-
-  public E set(int index, E value) {
+  @Override
+  public E set(E value, int index) {
     if (index < 0 || index >= this.size) {
       return null;
     }
@@ -65,7 +63,7 @@ public class LinkedList<E> {
     cursor.value = value;
     return oldValue;
   }
-
+  @Override
   public E remove(int index) {
     if (index < 0 || index >= this.size) {
       return null;
@@ -86,7 +84,7 @@ public class LinkedList<E> {
     this.size--;
     return deletedNode.value;
   }
-
+  @Override
   public Object[] toArray() {
     Object[] arr = new Object[this.size];
     Node<E> cursor = first;
@@ -96,7 +94,7 @@ public class LinkedList<E> {
     }
     return arr;
   }
-
+  @Override
   @SuppressWarnings("unchecked")
   public E[] toArray(E[] arr) {
     arr = (E[]) Array.newInstance(arr.getClass().getComponentType(), this.size);
@@ -106,10 +104,6 @@ public class LinkedList<E> {
       cursor = cursor.next; 
     }
     return arr;
-  }
-
-  public int size() {
-    return this.size;
   }
 
   class Node<T> {
