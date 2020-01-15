@@ -3,15 +3,15 @@ package ekgp49.dbc.handler;
 import java.sql.Date;
 import java.util.Arrays;
 import ekgp49.dbc.domain.Review;
-import util.AbstractList;
+import util.List;
 import util.Prompt;
 
 public class ReviewHandler {
   Prompt prompt;
-  AbstractList<Review> reviewList;
+  List<Review> reviewList;
   private int no = 1;
 
-  public ReviewHandler(Prompt prompt, AbstractList<Review> list) {
+  public ReviewHandler(Prompt prompt, List<Review> list) {
     this.prompt = prompt;
     reviewList = list;
   }

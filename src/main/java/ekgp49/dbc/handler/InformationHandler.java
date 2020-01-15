@@ -1,15 +1,15 @@
 package ekgp49.dbc.handler;
 
 import ekgp49.dbc.domain.Information;
-import util.AbstractList;
+import util.List;
 import util.Prompt;
 
 public class InformationHandler {
   Prompt prompt;
-  AbstractList<Information> informationList;
+  List<Information> informationList;
   private int no = 1;
 
-  public InformationHandler(Prompt prompt, AbstractList<Information> list) {
+  public InformationHandler(Prompt prompt, List<Information> list) {
     this.prompt = prompt;
     this.informationList = list;
   }
