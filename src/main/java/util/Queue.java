@@ -1,15 +1,15 @@
 package util;
 
 public class Queue<E> extends LinkedList<E>{
-  
+
   public void offer(E value) {
     this.add(value);
   }
-  
+
   public E poll() {
     return this.remove(0);
   }
-  
+
   @Override
   public Queue<E> clone() {
     Queue<E> temp = new Queue<>();
@@ -18,25 +18,22 @@ public class Queue<E> extends LinkedList<E>{
     }
     return temp;
   }
-  
+
   public Iterator<E> iterator() {
-    class QueueIterator<T> implements Iterator<T> {
-      Queue<T> queue;
-      
-      @SuppressWarnings("unchecked")
-      public QueueIterator() {
-        this.queue = (Queue<T>)Queue.this.clone();
+    return new Iterator<E>() {
+      Queue<E> queue;
+      {
+        this.queue = (Queue<E>)Queue.this.clone();
       }
       @Override
       public boolean hasNext() {
         return queue.size() > 0;
       }
       @Override
-      public T next() {
+      public E next() {
         return queue.poll();
       }
-    }
-    return new QueueIterator<>();
+    };
   }
-  
+
 }
