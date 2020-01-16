@@ -1,8 +1,8 @@
 package ekgp49.dbc.handler;
 
+import java.util.Iterator;
+import java.util.List;
 import ekgp49.dbc.domain.Information;
-import util.Iterator;
-import util.List;
 import util.Prompt;
 
 public class InformationHandler {
@@ -114,7 +114,7 @@ public class InformationHandler {
         System.out.println("유효한 입력이 아닙니다.");
     }
 
-    this.informationList.set(old, index);
+    this.informationList.set(index, old);
   }
 
   public void deleteInformaition() {

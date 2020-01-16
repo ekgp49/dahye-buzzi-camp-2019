@@ -2,9 +2,9 @@ package ekgp49.dbc.handler;
 
 import java.sql.Date;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import ekgp49.dbc.domain.Review;
-import util.Iterator;
-import util.List;
 import util.Prompt;
 
 public class ReviewHandler {
@@ -74,7 +74,7 @@ public class ReviewHandler {
     review.setViewCount(old.getViewCount());
 
     if (!review.equals(old)) {
-      this.reviewList.set(review, index);
+      this.reviewList.set(index, review);
       System.out.println("리뷰를 수정했습니다.");
     } else {
       System.out.println("리뷰 변경을 취소했습니다.");

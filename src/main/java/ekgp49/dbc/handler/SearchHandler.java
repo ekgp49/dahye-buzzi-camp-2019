@@ -1,14 +1,15 @@
 package ekgp49.dbc.handler;
 
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 import ekgp49.dbc.domain.Information;
 import ekgp49.dbc.domain.Search;
 import util.Prompt;
-import util.Queue;
 
 public class SearchHandler {
   Prompt prompt;
-  Queue<Search> list = new Queue<>();
+  Queue<Search> list = new LinkedList<>();
 
   public SearchHandler(Prompt prompt) {
     this.prompt = prompt;

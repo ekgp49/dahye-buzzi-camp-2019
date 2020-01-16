@@ -1,19 +1,20 @@
 package ekgp49.dbc;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
 import ekgp49.dbc.handler.InformationHandler;
 import ekgp49.dbc.handler.ReviewHandler;
 import ekgp49.dbc.handler.SearchHandler;
-import util.ArrayList;
-import util.Iterator;
-import util.LinkedList;
 import util.Prompt;
-import util.Queue;
-import util.Stack;
 public class App {
   static Scanner keyboard = new Scanner(System.in);
-  static Stack<String> commandStack = new Stack<>();
-  static Queue<String> commandQueue = new Queue<>();
+  static Deque<String> commandStack = new ArrayDeque<>();
+  static Queue<String> commandQueue = new LinkedList<>();
   public static void main(String[] args) {
     Prompt prompt = new Prompt(keyboard);
 
