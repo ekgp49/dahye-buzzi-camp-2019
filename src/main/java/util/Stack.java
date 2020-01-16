@@ -53,4 +53,22 @@ public class Stack<E> {
   public Iterator<E> iterator() {
     return new StackIterator<>(this);
   }
+  
+  public static class StackIterator<T> implements Iterator<T> {
+    Stack<T> stack;
+    
+    public StackIterator(Stack<T> stack) {
+     this.stack = stack.clone();
+    }
+    
+    @Override
+    public boolean hasNext() {
+      return !stack.empty();
+    }
+    @Override
+    public T next() {
+      return stack.pop();
+    }
+  }
+
 }

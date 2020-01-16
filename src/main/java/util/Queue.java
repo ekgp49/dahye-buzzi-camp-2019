@@ -22,4 +22,20 @@ public class Queue<E> extends LinkedList<E>{
   public Iterator<E> iterator() {
     return new QueueIterator<>(this);
   }
+  
+  public static class QueueIterator<T> implements Iterator<T> {
+    Queue<T> queue;
+
+    public QueueIterator(Queue<T> queue) {
+      this.queue = queue.clone();
+    }
+    @Override
+    public boolean hasNext() {
+      return queue.size() > 0;
+    }
+    @Override
+    public T next() {
+      return queue.poll();
+    }
+  }
 }
