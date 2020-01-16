@@ -49,4 +49,8 @@ public class Stack<E> {
     stack.elementData = arr;
     return stack;
   }
+  
+  public Iterator<E> iterator() {
+    return new StackIterator<>(this);
+  }
 }

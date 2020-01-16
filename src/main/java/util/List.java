@@ -16,4 +16,6 @@ public interface List<E> {
   Object[] toArray();
   
   int size();
+  
+  Iterator<E> iterator();
 }

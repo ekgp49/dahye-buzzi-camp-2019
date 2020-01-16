@@ -1,6 +1,7 @@
 package ekgp49.dbc.handler;
 
 import ekgp49.dbc.domain.Information;
+import util.Iterator;
 import util.List;
 import util.Prompt;
 
@@ -18,8 +19,9 @@ public class InformationHandler {
     if (this.informationList.size() == 0) {
       return;
     }
-    Information[] arr = this.informationList.toArray(new Information[] {});
-    for(Information info : arr) {
+    Iterator<Information> item = informationList.iterator();
+    while (item.hasNext()) {
+      Information info = item.next();
       System.out.printf("%s, %s, %s, %s, %s ~ %s, %s, %s\n", 
           info.getCafeName(), info.getCafeAddress(), info.getCafeCall(),
           info.getCafeWebSite(), info.getOpenTime(), 
@@ -45,7 +47,7 @@ public class InformationHandler {
 
   public void updateInformation() {
     int index = indexOfInfo(prompt.inputInt("가게 정보 번호: "));
-    
+
     for (int i = 0; i < this.informationList.size(); i++) {
       if (this.informationList.get(i).getNo() == no) {
         index = i;
@@ -121,11 +123,11 @@ public class InformationHandler {
       System.out.println("해당 번호의 정보가 없습니다.");
       return;
     }
-    
+
     this.informationList.remove(index);
     System.out.println("정보를 삭제했습니다.");
   }
-  
+
   private int indexOfInfo(int no) {
     for (int i = 0; i < this.informationList.size(); i++) {
       if (this.informationList.get(i).getNo() == no) {
@@ -134,5 +136,5 @@ public class InformationHandler {
     }
     return -1;
   }
-  
+
 }

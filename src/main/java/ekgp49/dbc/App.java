@@ -5,6 +5,7 @@ import ekgp49.dbc.handler.InformationHandler;
 import ekgp49.dbc.handler.ReviewHandler;
 import ekgp49.dbc.handler.SearchHandler;
 import util.ArrayList;
+import util.Iterator;
 import util.LinkedList;
 import util.Prompt;
 import util.Queue;
@@ -64,10 +65,10 @@ public class App {
           review.SelectStarRateReview();
           break;
         case "history" :
-          printCommandHistory();
+          printCommandHistory(commandStack.iterator());
           break;
         case "history2" :
-          printCommandHistory2();
+          printCommandHistory(commandQueue.iterator());
           break;
         default:
           if (!command.equalsIgnoreCase("quit")) {
@@ -79,29 +80,13 @@ public class App {
     keyboard.close();
   }
 
-  private static void printCommandHistory() {
-    Stack<String> historyStack = commandStack.clone();
+  private static void printCommandHistory(Iterator<String> iterator) {
+    Iterator<String> commands = iterator;
     System.out.println("명령 목록 출력!");
     int count = 0;
-    while (!historyStack.empty()) {
-      System.out.println(historyStack.pop());
-      if ((++count % 5) == 0 && !historyStack.empty()) {
-        System.out.print(":");
-        String str = keyboard.nextLine();
-        if (str.equalsIgnoreCase("q")) {
-          break;
-        }
-      }
-    }
-  }
-
-  private static void printCommandHistory2() {
-    Queue<String> historyQueue = commandQueue.clone();
-    System.out.println("명령 목록 출력!");
-    int count = 0;
-    while (historyQueue.size() > 0) {
-      System.out.println(historyQueue.poll());
-      if ((++count % 5) == 0 && historyQueue.size() > 0) {
+    while (commands.hasNext()) {
+      System.out.println(commands.next());
+      if ((++count % 5) == 0 && commands.hasNext()) {
         System.out.print(":");
         String str = keyboard.nextLine();
         if (str.equalsIgnoreCase("q")) {

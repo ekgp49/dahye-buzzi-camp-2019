@@ -3,6 +3,7 @@ package ekgp49.dbc.handler;
 import java.sql.Date;
 import java.util.Arrays;
 import ekgp49.dbc.domain.Review;
+import util.Iterator;
 import util.List;
 import util.Prompt;
 
@@ -21,8 +22,9 @@ public class ReviewHandler {
     if (this.reviewList.size() == 0) {
       return;
     }
-    Review[] arr = reviewList.toArray(new Review[] {});
-    for(Review r : arr) {
+    Iterator<Review> item = reviewList.iterator();
+    while (item.hasNext()) {
+      Review r = item.next();
       System.out.printf("%d, %s, %s, %s, %s, %s, %s \n%s\n", 
           r.getNo(), r.getCafeName(), r.getCustomer(), r.getStarRate(), r.getCreatedDate(),
           r.getTimeFormFromToday(), r.getViewCount(), r.getContent());

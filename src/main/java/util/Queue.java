@@ -18,4 +18,8 @@ public class Queue<E> extends LinkedList<E>{
     }
     return temp;
   }
+  
+  public Iterator<E> iterator() {
+    return new QueueIterator<>(this);
+  }
 }
