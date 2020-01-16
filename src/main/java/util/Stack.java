@@ -51,14 +51,15 @@ public class Stack<E> {
   }
   
   public Iterator<E> iterator() {
-    return new StackIterator<>(this);
+    return this.new StackIterator<>();
   }
   
-  public static class StackIterator<T> implements Iterator<T> {
+  public class StackIterator<T> implements Iterator<T> {
     Stack<T> stack;
     
-    public StackIterator(Stack<T> stack) {
-     this.stack = stack.clone();
+    @SuppressWarnings("unchecked")
+    public StackIterator() {
+     this.stack = (Stack<T>)Stack.this.clone();
     }
     
     @Override
