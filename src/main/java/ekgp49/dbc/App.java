@@ -11,18 +11,20 @@ import ekgp49.dbc.handler.InformationHandler;
 import ekgp49.dbc.handler.ReviewHandler;
 import ekgp49.dbc.handler.SearchHandler;
 import util.Prompt;
+
 public class App {
   static Scanner keyboard = new Scanner(System.in);
   static Deque<String> commandStack = new ArrayDeque<>();
   static Queue<String> commandQueue = new LinkedList<>();
+
   public static void main(String[] args) {
     Prompt prompt = new Prompt(keyboard);
 
-    SearchHandler search = new SearchHandler(prompt);
     ReviewHandler review = new ReviewHandler(prompt, new LinkedList<>());
     InformationHandler information = new InformationHandler(prompt, new ArrayList<>());
+    SearchHandler search = new SearchHandler(prompt, information);
 
-    String command; 
+    String command;
     do {
       System.out.print("\n명령> ");
       command = keyboard.nextLine();
@@ -34,9 +36,7 @@ public class App {
 
       switch (command) {
         case "/search":
-          search.keySearch(information); // 이거 하면 검색 키워드 선택하게 하고 
-          //=> 검색 키워드 선택한 대로 information에서 찾아서 쫙 보여줄거임
-          // App에서 만든 InformationHandler 객체를 넘겨줘야 그 객체에 저장된 informationList 객체를 이용할 수 있다
+          search.keySearch();
           break;
         case "/info/add":
           information.addInformation();
@@ -65,10 +65,10 @@ public class App {
         case "/review/star":
           review.SelectStarRateReview();
           break;
-        case "history" :
+        case "history":
           printCommandHistory(commandStack.iterator());
           break;
-        case "history2" :
+        case "history2":
           printCommandHistory(commandQueue.iterator());
           break;
         default:
@@ -87,7 +87,7 @@ public class App {
     int count = 0;
     while (commands.hasNext()) {
       System.out.println(commands.next());
-      if ((++count % 5) == 0 && commands.hasNext()) {
+      if (++count % 5 == 0 && commands.hasNext()) {
         System.out.print(":");
         String str = keyboard.nextLine();
         if (str.equalsIgnoreCase("q")) {

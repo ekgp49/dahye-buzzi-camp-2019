@@ -10,34 +10,36 @@ import util.Prompt;
 public class SearchHandler {
   Prompt prompt;
   Queue<Search> list = new LinkedList<>();
+  InformationHandler information;
 
-  public SearchHandler(Prompt prompt) {
+  public SearchHandler(Prompt prompt, InformationHandler information) {
     this.prompt = prompt;
+    this.information = information;
   }
 
-  public void keySearch(InformationHandler information) {
+  public void keySearch() {
     Search search = new Search();
+    search.setCafeName(prompt.inputString("카페 상호: "));
     search.setCafeArea(prompt.inputString("지역: "));
-    search.setCafeName(prompt.inputString("카페 상호: "));    
     search.setCafeMenu(prompt.inputString("메뉴: "));
-    //    search.setStarRate(prompt.inputInt("별점: "));
+    // search.setStarRate(prompt.inputInt("별점: "));
     this.list.offer(search);
-    listSearch(search, information);
+    listSearch(search);
   }
 
-  private void listSearch(Search search, InformationHandler information) {
+  private void listSearch(Search search) {
     Information[] info = information.informationList.toArray(new Information[] {});
     Information[] arr = new Information[info.length];
     int index = 0;
     for (int i = 0; i < info.length; i++) {
       if (search.getCafeArea() == null) {
-        search.setCafeArea(info[i].getCafeAddress()); 
+        search.setCafeArea(info[i].getCafeAddress());
       }
       if (search.getCafeName() == null) {
-        search.setCafeName(info[i].getCafeName()); 
+        search.setCafeName(info[i].getCafeName());
       }
       if (search.getCafeMenu() == null) {
-        search.setCafeMenu(info[i].getCafeMenu()); 
+        search.setCafeMenu(info[i].getCafeMenu());
       }
       if (info[i].getCafeName().contains(search.getCafeName())
           && info[i].getCafeAddress().contains(search.getCafeArea())
@@ -49,11 +51,9 @@ public class SearchHandler {
       System.out.println("검색 결과가 없습니다.");
       return;
     }
-    for(Information i : Arrays.copyOf(arr, index)) {
-      System.out.printf("주소: %s, 상호: %s, 연락처: %s, "
-          + "웹사이트: %s, %s시 ~ %s시, 휴일: %s, 메뉴: %s\n", 
-          i.getCafeAddress(), i.getCafeName(), i.getCafeCall(),
-          i.getCafeWebSite(), i.getOpenTime(), 
+    for (Information i : Arrays.copyOf(arr, index)) {
+      System.out.printf("상호: %s, 주소: %s,  연락처: %s, " + "웹사이트: %s, %s시 ~ %s시, 휴일: %s, 메뉴: %s\n",
+          i.getCafeName(), i.getCafeAddress(), i.getCafeCall(), i.getCafeWebSite(), i.getOpenTime(),
           i.getCloseTime(), i.getHolliday(), i.getCafeMenu());
     }
   }
