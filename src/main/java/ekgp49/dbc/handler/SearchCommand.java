@@ -2,22 +2,24 @@ package ekgp49.dbc.handler;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import ekgp49.dbc.domain.Information;
 import ekgp49.dbc.domain.Search;
 import util.Prompt;
 
-public class SearchHandler {
+public class SearchCommand implements Command {
   Prompt prompt;
   Queue<Search> list = new LinkedList<>();
-  InformationHandler information;
+  List<Information> information;
 
-  public SearchHandler(Prompt prompt, InformationHandler information) {
+  public SearchCommand(Prompt prompt, List<Information> information) {
     this.prompt = prompt;
     this.information = information;
   }
 
-  public void keySearch() {
+  @Override
+  public void execute() {
     Search search = new Search();
     search.setCafeName(prompt.inputString("카페 상호: "));
     search.setCafeArea(prompt.inputString("지역: "));
@@ -28,7 +30,7 @@ public class SearchHandler {
   }
 
   private void listSearch(Search search) {
-    Information[] info = information.informationList.toArray(new Information[] {});
+    Information[] info = information.toArray(new Information[] {});
     Information[] arr = new Information[info.length];
     int index = 0;
     for (int i = 0; i < info.length; i++) {

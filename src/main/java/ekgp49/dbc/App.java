@@ -1,15 +1,26 @@
 package ekgp49.dbc;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
-import ekgp49.dbc.handler.InformationHandler;
-import ekgp49.dbc.handler.ReviewHandler;
-import ekgp49.dbc.handler.SearchHandler;
+import ekgp49.dbc.domain.Information;
+import ekgp49.dbc.domain.Review;
+import ekgp49.dbc.handler.Command;
+import ekgp49.dbc.handler.InformationAddCommand;
+import ekgp49.dbc.handler.InformationDeleteCommand;
+import ekgp49.dbc.handler.InformationListCommand;
+import ekgp49.dbc.handler.InformationUpdateCommand;
+import ekgp49.dbc.handler.ReviewAddCommand;
+import ekgp49.dbc.handler.ReviewDeleteCommand;
+import ekgp49.dbc.handler.ReviewListCommand;
+import ekgp49.dbc.handler.ReviewSelectCommand;
+import ekgp49.dbc.handler.ReviewUpdateCommand;
+import ekgp49.dbc.handler.SearchCommand;
 import util.Prompt;
 
 public class App {
@@ -20,65 +31,47 @@ public class App {
   public static void main(String[] args) {
     Prompt prompt = new Prompt(keyboard);
 
-    ReviewHandler review = new ReviewHandler(prompt, new LinkedList<>());
-    InformationHandler information = new InformationHandler(prompt, new ArrayList<>());
-    SearchHandler search = new SearchHandler(prompt, information);
+    List<Information> informationList = new LinkedList<>();
+    List<Review> reviewList = new LinkedList<>();
+
+    HashMap<String, Command> commandHandler = new HashMap<>();
+
+    commandHandler.put("/search", new SearchCommand(prompt, informationList));
+    commandHandler.put("/info/add", new InformationAddCommand(prompt, informationList));
+    commandHandler.put("/info/list", new InformationListCommand(informationList));
+    commandHandler.put("/info/update", new InformationUpdateCommand(prompt, informationList));
+    commandHandler.put("/info/delete", new InformationDeleteCommand(prompt, informationList));
+    commandHandler.put("/review/add", new ReviewAddCommand(prompt, reviewList));
+    commandHandler.put("/review/list", new ReviewListCommand(reviewList));
+    commandHandler.put("/review/update", new ReviewUpdateCommand(prompt, reviewList));
+    commandHandler.put("/review/delete", new ReviewDeleteCommand(prompt, reviewList));
+    commandHandler.put("/review/star", new ReviewSelectCommand(prompt, reviewList));
 
     String command;
-    do {
-      System.out.print("\n명령> ");
-      command = keyboard.nextLine();
-
-      if (command != "") {
-        commandStack.push(command);
-        commandQueue.offer(command);
+    while (true) {
+      command = prompt.inputString("\n명령> ");
+      if (command.length() == 0) {
+        continue;
+      } else if (command.equals("history")) {
+        printCommandHistory(commandStack.iterator());
+        continue;
+      } else if (command.equals("history2")) {
+        printCommandHistory(commandQueue.iterator());
+        continue;
+      } else if (command.equalsIgnoreCase("quit")) {
+        System.out.println("종료합니다.");
+        break;
       }
 
-      switch (command) {
-        case "/search":
-          search.keySearch();
-          break;
-        case "/info/add":
-          information.addInformation();
-          break;
-        case "/info/list":
-          information.listInformaition();
-          break;
-        case "/info/update":
-          information.updateInformation();
-          break;
-        case "/info/delete":
-          information.deleteInformaition();
-          break;
-        case "/review/add":
-          review.addReview();
-          break;
-        case "/review/list":
-          review.listReview();
-          break;
-        case "/review/update":
-          review.updateReview();
-          break;
-        case "/review/delete":
-          review.deleteReview();
-          break;
-        case "/review/star":
-          review.SelectStarRateReview();
-          break;
-        case "history":
-          printCommandHistory(commandStack.iterator());
-          break;
-        case "history2":
-          printCommandHistory(commandQueue.iterator());
-          break;
-        default:
-          if (!command.equalsIgnoreCase("quit")) {
-            System.out.println("실행할 수 없는 명령입니다.");
-          }
+      commandStack.push(command);
+      commandQueue.offer(command);
+
+      if (commandHandler.get(command) != null) {
+        commandHandler.get(command).execute();
+      } else {
+        System.out.println("실행할 수 없는 명령입니다.");
       }
-    } while (!command.equalsIgnoreCase("quit"));
-    System.out.println("종료합니다.");
-    keyboard.close();
+    }
   }
 
   private static void printCommandHistory(Iterator<String> iterator) {
