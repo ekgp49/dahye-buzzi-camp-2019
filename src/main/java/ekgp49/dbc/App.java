@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
+import com.google.gson.Gson;
 import ekgp49.dbc.domain.Information;
 import ekgp49.dbc.domain.Review;
 import ekgp49.dbc.handler.Command;
@@ -86,15 +88,9 @@ public class App {
   }
 
   private static void loadInformationData() {
-    File file = new File("./information.csv");
-    try (FileReader in = new FileReader(file); Scanner scanData = new Scanner(in);) {
-      while (true) {
-        try {
-          informationList.add(Information.valueOf(scanData.nextLine()));
-        } catch (Exception e) {
-          break;
-        }
-      }
+    File file = new File("./information.json");
+    try (FileReader in = new FileReader(file)) {
+      informationList.addAll(Arrays.asList(new Gson().fromJson(in, Information[].class)));
     } catch (IOException e) {
       System.out.println("파일 읽기 중 오류 발생 - " + e.getMessage());
     }
@@ -102,11 +98,9 @@ public class App {
   }
 
   private static void saveInformationData() {
-    File file = new File("./information.csv");
+    File file = new File("./information.json");
     try (FileWriter out = new FileWriter(file);) {
-      for (Information i : informationList) {
-        out.write(i.toCsvString() + "\n");
-      }
+      out.write(new Gson().toJson(informationList));
       System.out.printf("총 %d개의 정보 데이터를 세이브했습니다.\n", informationList.size());
     } catch (IOException e) {
       System.out.println("파일 쓰기 중 오류 발생 - " + e.getMessage());
@@ -130,15 +124,9 @@ public class App {
   }
 
   private static void loadReviewData() {
-    File file = new File("./review.csv");
-    try (FileReader in = new FileReader(file); Scanner scanData = new Scanner(in);) {
-      while (true) {
-        try {
-          reviewList.add(Review.valueOf(scanData.nextLine()));
-        } catch (Exception e) {
-          break;
-        }
-      }
+    File file = new File("./review.json");
+    try (FileReader in = new FileReader(file)) {
+      reviewList.addAll(Arrays.asList(new Gson().fromJson(in, Review[].class)));
     } catch (IOException e) {
       System.out.println("파일 읽기 중 오류 발생 - " + e.getMessage());
     }
@@ -146,11 +134,9 @@ public class App {
   }
 
   private static void saveReviewData() {
-    File file = new File("./review.csv");
+    File file = new File("./review.json");
     try (FileWriter out = new FileWriter(file);) {
-      for (Review r : reviewList) {
-        out.write(r.toCsvString() + "\n");
-      }
+      out.write(new Gson().toJson(reviewList));
       System.out.printf("총 %d개의 리뷰 데이터를 세이브했습니다.\n", reviewList.size());
     } catch (IOException e) {
       System.out.println("파일 쓰기 중 오류 발생 - " + e.getMessage());
