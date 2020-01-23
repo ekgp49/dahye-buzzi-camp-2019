@@ -67,10 +67,15 @@ public class App {
       commandQueue.offer(command);
 
       if (commandHandler.get(command) != null) {
-        commandHandler.get(command).execute();
+        try {
+          commandHandler.get(command).execute();
+        } catch (Exception e) {
+          System.out.printf("명령어 실행 중 오류 발생: %s\n", e.getMessage());
+        }
       } else {
         System.out.println("실행할 수 없는 명령입니다.");
       }
+
     }
   }
 
