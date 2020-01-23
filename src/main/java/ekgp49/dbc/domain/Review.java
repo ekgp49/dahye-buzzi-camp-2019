@@ -3,6 +3,27 @@ package ekgp49.dbc.domain;
 import java.sql.Date;
 
 public class Review {
+
+  public String toCsvString() {
+    return String.format("%d,%s,%s,%d,%s,%s,%s,%s", this.getNo(), this.getCafeName(),
+        this.getCustomer(), this.getStarRate(), this.getContent(), this.getViewCount(),
+        this.getCreatedDate(), this.getTimeFormFromToday());
+  }
+
+  public static Review valueOf(String csv) {
+    String[] data = csv.split(",");
+    Review review = new Review();
+    review.setNo(Integer.parseInt(data[0]));
+    review.setCafeName(data[1]);
+    review.setCustomer(data[2]);
+    review.setStarRate(Integer.parseInt(data[3]));
+    review.setContent(data[4]);
+    review.setViewCount(Integer.parseInt(data[5]));
+    review.setCreatedDate(Date.valueOf(data[6]));
+    review.setTimeFormFromToday(data[7]);
+    return review;
+  }
+
   private int no;
   private String cafeName;
   private String customer;

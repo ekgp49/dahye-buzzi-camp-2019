@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Date;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
@@ -91,19 +90,7 @@ public class App {
     try (FileReader in = new FileReader(file); Scanner scanData = new Scanner(in);) {
       while (true) {
         try {
-          String line = scanData.nextLine();
-          String[] data = line.split(",");
-          Information info = new Information();
-          info.setNo(Integer.parseInt(data[0]));
-          info.setCafeName(data[1]);
-          info.setCafeAddress(data[2]);
-          info.setCafeCall(data[3]);
-          info.setCafeWebSite(data[4]);
-          info.setOpenTime(data[5]);
-          info.setCloseTime(data[6]);
-          info.setHolliday(data[7]);
-          info.setCafeMenu(data[8]);
-          informationList.add(info);
+          informationList.add(Information.valueOf(scanData.nextLine()));
         } catch (Exception e) {
           break;
         }
@@ -118,10 +105,7 @@ public class App {
     File file = new File("./information.csv");
     try (FileWriter out = new FileWriter(file);) {
       for (Information i : informationList) {
-        String line = String.format("%d,%s,%s,%s,%s,%s,%s,%s,%s\n", i.getNo(), i.getCafeName(),
-            i.getCafeAddress(), i.getCafeCall(), i.getCafeWebSite(), i.getOpenTime(),
-            i.getCloseTime(), i.getHolliday(), i.getCafeMenu());
-        out.write(line);
+        out.write(i.toCsvString() + "\n");
       }
       System.out.printf("총 %d개의 정보 데이터를 세이브했습니다.\n", informationList.size());
     } catch (IOException e) {
@@ -150,18 +134,7 @@ public class App {
     try (FileReader in = new FileReader(file); Scanner scanData = new Scanner(in);) {
       while (true) {
         try {
-          String line = scanData.nextLine();
-          String[] data = line.split(",");
-          Review r = new Review();
-          r.setNo(Integer.parseInt(data[0]));
-          r.setCafeName(data[1]);
-          r.setCustomer(data[2]);
-          r.setStarRate(Integer.parseInt(data[3]));
-          r.setContent(data[4]);
-          r.setViewCount(Integer.parseInt(data[5]));
-          r.setCreatedDate(Date.valueOf(data[6]));
-          r.setTimeFormFromToday(data[7]);
-          reviewList.add(r);
+          reviewList.add(Review.valueOf(scanData.nextLine()));
         } catch (Exception e) {
           break;
         }
@@ -176,10 +149,7 @@ public class App {
     File file = new File("./review.csv");
     try (FileWriter out = new FileWriter(file);) {
       for (Review r : reviewList) {
-        String line = String.format("%d,%s,%s,%d,%s,%s,%s,%s\n", r.getNo(), r.getCafeName(),
-            r.getCustomer(), r.getStarRate(), r.getContent(), r.getViewCount(), r.getCreatedDate(),
-            r.getTimeFormFromToday());
-        out.write(line);
+        out.write(r.toCsvString() + "\n");
       }
       System.out.printf("총 %d개의 리뷰 데이터를 세이브했습니다.\n", reviewList.size());
     } catch (IOException e) {
