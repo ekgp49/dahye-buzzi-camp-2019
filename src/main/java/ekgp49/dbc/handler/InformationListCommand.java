@@ -19,7 +19,7 @@ public class InformationListCommand implements Command {
     Iterator<Information> item = informationList.iterator();
     while (item.hasNext()) {
       Information info = item.next();
-      System.out.printf("%s, %s, %s, %s, %s ~ %s, %s, %s\n", info.getCafeName(),
+      System.out.printf("%d, %s, %s, %s, %s, %s ~ %s, %s, %s\n", info.getNo(), info.getCafeName(),
           info.getCafeAddress(), info.getCafeCall(), info.getCafeWebSite(), info.getOpenTime(),
           info.getCloseTime(), info.getHolliday(), info.getCafeMenu());
     }

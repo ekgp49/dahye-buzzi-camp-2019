@@ -8,18 +8,22 @@ import util.Prompt;
 public class ReviewAddCommand implements Command {
   Prompt prompt;
   List<Review> reviewList;
-  private int no = 1;
+  private int no;
 
   public ReviewAddCommand(Prompt prompt, List<Review> list) {
     this.prompt = prompt;
     reviewList = list;
   }
 
+  {
+  }
+
   @Override
   public void execute() {
+    no = reviewList.size() != 0 ? reviewList.get(reviewList.size() - 1).getNo() : 1;
     System.out.println("리뷰");
     Review review = new Review();
-    review.setNo(this.no++);
+    review.setNo(++no);
     review.setCafeName(prompt.inputString("카페 상호: "));
     review.setCustomer(prompt.inputString("고객: "));
     review.setStarRate(prompt.inputInt("별점: "));

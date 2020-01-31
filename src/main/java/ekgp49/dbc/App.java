@@ -1,11 +1,15 @@
 package ekgp49.dbc;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.Date;
 import java.util.ArrayDeque;
-import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,7 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
-import com.google.gson.Gson;
 import ekgp49.dbc.domain.Information;
 import ekgp49.dbc.domain.Review;
 import ekgp49.dbc.handler.Command;
@@ -87,26 +90,6 @@ public class App {
     saveReviewData();
   }
 
-  private static void loadInformationData() {
-    File file = new File("./information.json");
-    try (FileReader in = new FileReader(file)) {
-      informationList.addAll(Arrays.asList(new Gson().fromJson(in, Information[].class)));
-    } catch (IOException e) {
-      System.out.println("파일 읽기 중 오류 발생 - " + e.getMessage());
-    }
-    System.out.printf("총 %d개의 정보 데이터를 로딩했습니다.\n", informationList.size());
-  }
-
-  private static void saveInformationData() {
-    File file = new File("./information.json");
-    try (FileWriter out = new FileWriter(file);) {
-      out.write(new Gson().toJson(informationList));
-      System.out.printf("총 %d개의 정보 데이터를 세이브했습니다.\n", informationList.size());
-    } catch (IOException e) {
-      System.out.println("파일 쓰기 중 오류 발생 - " + e.getMessage());
-    }
-  }
-
   private static void printCommandHistory(Iterator<String> iterator) {
     Iterator<String> commands = iterator;
     System.out.println("명령 목록 출력!");
@@ -123,10 +106,72 @@ public class App {
     }
   }
 
+  private static void loadInformationData() {
+    File file = new File("./information.data");
+    try (DataInputStream in =
+        new DataInputStream(new BufferedInputStream(new FileInputStream(file)))) {
+      int size = in.readInt();
+      for (int i = 0; i < size; i++) {
+        Information info = new Information();
+        info.setNo(in.readInt());
+        info.setCafeName(in.readUTF());
+        info.setCafeAddress(in.readUTF());
+        info.setCafeCall(in.readUTF());
+        info.setCafeWebSite(in.readUTF());
+        info.setOpenTime(in.readUTF());
+        info.setCloseTime(in.readUTF());
+        info.setHolliday(in.readUTF());
+        info.setCafeMenu(in.readUTF());
+
+        informationList.add(info);
+      }
+    } catch (IOException e) {
+      System.out.println("파일 읽기 중 오류 발생 - " + e.getMessage());
+    }
+    System.out.printf("총 %d개의 정보 데이터를 로딩했습니다.\n", informationList.size());
+  }
+
+  private static void saveInformationData() {
+    File file = new File("./information.data");
+    try (DataOutputStream out =
+        new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
+      out.writeInt(informationList.size());
+      for (Information info : informationList) {
+        out.writeInt(info.getNo());
+        out.writeUTF(info.getCafeName());
+        out.writeUTF(info.getCafeAddress());
+        out.writeUTF(info.getCafeCall());
+        out.writeUTF(info.getCafeWebSite());
+        out.writeUTF(info.getOpenTime());
+        out.writeUTF(info.getCloseTime());
+        out.writeUTF(info.getHolliday());
+        out.writeUTF(info.getCafeMenu());
+
+      }
+      System.out.printf("총 %d개의 정보 데이터를 세이브했습니다.\n", informationList.size());
+    } catch (IOException e) {
+      System.out.println("파일 쓰기 중 오류 발생 - " + e.getMessage());
+    }
+  }
+
   private static void loadReviewData() {
-    File file = new File("./review.json");
-    try (FileReader in = new FileReader(file)) {
-      reviewList.addAll(Arrays.asList(new Gson().fromJson(in, Review[].class)));
+    File file = new File("./review.data");
+    try (DataInputStream in =
+        new DataInputStream(new BufferedInputStream(new FileInputStream(file)))) {
+      int size = in.readInt();
+      for (int i = 0; i < size; i++) {
+        Review review = new Review();
+        review.setNo(in.readInt());
+        review.setCafeName(in.readUTF());
+        review.setCustomer(in.readUTF());
+        review.setStarRate(in.readInt());
+        review.setContent(in.readUTF());
+        review.setViewCount(in.readInt());
+        review.setCreatedDate(Date.valueOf(in.readUTF()));
+        review.setTimeFormFromToday(in.readUTF());
+
+        reviewList.add(review);
+      }
     } catch (IOException e) {
       System.out.println("파일 읽기 중 오류 발생 - " + e.getMessage());
     }
@@ -134,9 +179,20 @@ public class App {
   }
 
   private static void saveReviewData() {
-    File file = new File("./review.json");
-    try (FileWriter out = new FileWriter(file);) {
-      out.write(new Gson().toJson(reviewList));
+    File file = new File("./review.data");
+    try (DataOutputStream out =
+        new DataOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
+      out.writeInt(reviewList.size());
+      for (Review review : reviewList) {
+        out.writeInt(review.getNo());
+        out.writeUTF(review.getCafeName());
+        out.writeUTF(review.getCustomer());
+        out.writeInt(review.getStarRate());
+        out.writeUTF(review.getContent());
+        out.writeInt(review.getViewCount());
+        out.writeUTF(review.getCreatedDate().toString());
+        out.writeUTF(review.getTimeFormFromToday());
+      }
       System.out.printf("총 %d개의 리뷰 데이터를 세이브했습니다.\n", reviewList.size());
     } catch (IOException e) {
       System.out.println("파일 쓰기 중 오류 발생 - " + e.getMessage());

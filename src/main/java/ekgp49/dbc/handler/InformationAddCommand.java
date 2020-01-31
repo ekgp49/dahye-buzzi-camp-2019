@@ -7,7 +7,7 @@ import util.Prompt;
 public class InformationAddCommand implements Command {
   Prompt prompt;
   List<Information> informationList;
-  private int no = 1;
+  private int no;
 
   public InformationAddCommand(Prompt prompt, List<Information> list) {
     this.prompt = prompt;
@@ -16,8 +16,9 @@ public class InformationAddCommand implements Command {
 
   @Override
   public void execute() {
+    no = informationList.size() != 0 ? informationList.get(informationList.size() - 1).getNo() : 0;
     Information information = new Information();
-    information.setNo(this.no++);
+    information.setNo(++no);
     information.setCafeName(prompt.inputString("카페 상호: "));
     information.setCafeAddress(prompt.inputString("주소: "));
     information.setCafeCall(prompt.inputString("연락처: "));
