@@ -1,6 +1,10 @@
 package ekgp49.dbc.domain;
 
-public class Information {
+import java.io.Serializable;
+
+public class Information implements Serializable {
+
+  private static final long serialVersionUID = 20200131L;
 
   public String toCsvString() {
     return String.format("%d,%s,%s,%s,%s,%s,%s,%s,%s", this.getNo(), this.getCafeName(),

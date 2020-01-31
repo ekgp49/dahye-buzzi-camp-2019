@@ -1,8 +1,11 @@
 package ekgp49.dbc.domain;
 
+import java.io.Serializable;
 import java.sql.Date;
 
-public class Review {
+public class Review implements Serializable {
+
+  private static final long serialVersionUID = 20200131L;
 
   public String toCsvString() {
     return String.format("%d,%s,%s,%d,%s,%s,%s,%s", this.getNo(), this.getCafeName(),
