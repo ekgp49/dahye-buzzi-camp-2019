@@ -7,12 +7,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import ekgp49.dbc.context.ApplicationContextListener;
-import ekgp49.dbc.domain.Information;
-import ekgp49.dbc.domain.Review;
+import ekgp49.dbc.dao.InformationDao;
+import ekgp49.dbc.dao.ReviewDao;
 import ekgp49.dbc.servlet.InformationAddServlet;
 import ekgp49.dbc.servlet.InformationDeleteServlet;
 import ekgp49.dbc.servlet.InformationListServlet;
@@ -30,38 +29,57 @@ public class ServerApp {
   Map<String, Object> context = new HashMap<>();
   Map<String, Servlet> servletMap = new HashMap<>();
 
-  List<Information> informationList;
-  List<Review> reviewList;
+  public void addListener(ApplicationContextListener listener) {
+    listeners.add(listener);
+  }
 
-  @SuppressWarnings("unchecked")
+
+  public void removeListener(ApplicationContextListener listener) {
+    listeners.remove(listener);
+  }
+
+
+  private void notifyApplicationInitialized() {
+    for (ApplicationContextListener a : listeners) {
+      a.contextInitialized(context);
+    }
+  }
+
+
+  private void notifyApplicationDestroyed() {
+    for (ApplicationContextListener a : listeners) {
+      a.contextDestroyed(context);
+    }
+  }
+
+
   void service() {
     notifyApplicationInitialized();
-    informationList = (List<Information>) context.get("informationList");
-    reviewList = (List<Review>) context.get("reviewList");
+    InformationDao infoDao = (InformationDao) context.get("infoDao");
+    ReviewDao reviewDao = (ReviewDao) context.get("reviewDao");
     System.out.println("앱 서버입니다");
 
-    servletMap.put("/info/add", new InformationAddServlet(informationList));
-    servletMap.put("/info/delete", new InformationDeleteServlet(informationList));
-    servletMap.put("/info/list", new InformationListServlet(informationList));
-    servletMap.put("/info/update", new InformationUpdateServlet(informationList));
-    servletMap.put("/review/add", new ReviewAddServlet(reviewList));
-    servletMap.put("/review/delete", new ReviewDeleteServlet(reviewList));
-    servletMap.put("/review/list", new ReviewListServlet(reviewList));
-    servletMap.put("/review/star", new ReviewSelectServlet(reviewList));
-    servletMap.put("/review/update", new ReviewUpdateServlet(reviewList));
-    servletMap.put("/search", new InformationListServlet(informationList));
+    servletMap.put("/info/add", new InformationAddServlet(infoDao));
+    servletMap.put("/info/delete", new InformationDeleteServlet(infoDao));
+    servletMap.put("/info/list", new InformationListServlet(infoDao));
+    servletMap.put("/info/update", new InformationUpdateServlet(infoDao));
+    servletMap.put("/review/add", new ReviewAddServlet(reviewDao));
+    servletMap.put("/review/delete", new ReviewDeleteServlet(reviewDao));
+    servletMap.put("/review/list", new ReviewListServlet(reviewDao));
+    servletMap.put("/review/star", new ReviewSelectServlet(reviewDao));
+    servletMap.put("/review/update", new ReviewUpdateServlet(reviewDao));
+    servletMap.put("/search", new InformationListServlet(infoDao));
 
     try (ServerSocket serverSocket = new ServerSocket(9999)) {
       System.out.println("클라이언트 연결 대기중...");
       while (true) {
-        Socket socket = serverSocket.accept();
-
-        if (processRequest(socket) == 9) {
-          break;
+        try (Socket socket = serverSocket.accept()) {
+          if (processRequest(socket) == 9) {
+            break;
+          }
         }
-
+        System.out.println("-------------연결 종료---------------");
       }
-      System.out.println("-------------연결 종료---------------");
     } catch (Exception e) {
       System.out.println("서버 문제 발생");
       e.printStackTrace();
@@ -102,8 +120,8 @@ public class ServerApp {
           notFount(out);
         }
 
-        System.out.println("클라이언트에게 응답하였음");
         out.flush();
+        System.out.println("클라이언트에게 응답하였음");
       }
     } catch (Exception e) {
       System.out.println("서버 문제 발생");
@@ -119,28 +137,7 @@ public class ServerApp {
   }
 
   private void quit(ObjectOutputStream out) throws IOException {
-    out.writeUTF("OK");
-    out.flush();
-  }
-
-  public void addListener(ApplicationContextListener listener) {
-    listeners.add(listener);
-  }
-
-  public void removeListener(ApplicationContextListener listener) {
-    listeners.remove(listener);
-  }
-
-  private void notifyApplicationInitialized() {
-    for (ApplicationContextListener a : listeners) {
-      a.contextInitialized(context);
-    }
-  }
-
-  private void notifyApplicationDestroyed() {
-    for (ApplicationContextListener a : listeners) {
-      a.contextDestroyed(context);
-    }
+    // 여기서 out.write("OK"); 했더니 /server/stop할 때마다 자꾸 예외떠서 안에 있는 코드 없앴더니 안뜸
   }
 
   public static void main(String[] args) {

@@ -2,26 +2,25 @@ package ekgp49.dbc.servlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.List;
+import ekgp49.dbc.dao.InformationDao;
 import ekgp49.dbc.domain.Information;
 
 public class InformationAddServlet implements Servlet {
-  List<Information> informationList;
+  InformationDao infoDao;
 
-  public InformationAddServlet(List<Information> informationList) {
-    this.informationList = informationList;
+  public InformationAddServlet(InformationDao infoDao) {
+    this.infoDao = infoDao;
   }
 
   @Override
   public void service(ObjectOutputStream out, ObjectInputStream in) throws Exception {
-    int no;
-    no = informationList.size() == 0 ? 1
-        : informationList.get(informationList.size() - 1).getNo() + 1;
+    int no = infoDao.getConcreteNo();
     out.writeInt(no);
     out.flush();
-    informationList.add((Information) in.readObject());
+    infoDao.insert((Information) in.readObject());
     out.writeUTF("OK");
     out.writeUTF("정보를 저장했습니다.");
+    out.flush();
 
   }
 }

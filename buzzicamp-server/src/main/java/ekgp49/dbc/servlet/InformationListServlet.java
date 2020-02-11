@@ -2,20 +2,19 @@ package ekgp49.dbc.servlet;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.List;
-import ekgp49.dbc.domain.Information;
+import ekgp49.dbc.dao.InformationDao;
 
 public class InformationListServlet implements Servlet {
-  List<Information> informationList;
+  InformationDao infoDao;
 
-  public InformationListServlet(List<Information> informationList) {
-    this.informationList = informationList;
+  public InformationListServlet(InformationDao infoDao) {
+    this.infoDao = infoDao;
   }
 
   @Override
   public void service(ObjectOutputStream out, ObjectInputStream in) throws Exception {
     out.writeUTF("OK");
     out.reset();
-    out.writeObject(informationList);
+    out.writeObject(infoDao.findAll());
   }
 }

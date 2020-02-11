@@ -3,34 +3,35 @@ package ekgp49.dbc.servlet;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Arrays;
-import java.util.List;
+import ekgp49.dbc.dao.ReviewDao;
 import ekgp49.dbc.domain.Review;
 
 public class ReviewSelectServlet implements Servlet {
-  List<Review> reviewList;
+  ReviewDao reviewDao;
 
-  public ReviewSelectServlet(List<Review> reviewList) {
-    this.reviewList = reviewList;
+  public ReviewSelectServlet(ReviewDao reviewDao) {
+    this.reviewDao = reviewDao;
   }
 
   @Override
   public void service(ObjectOutputStream out, ObjectInputStream in) throws Exception {
     int star = in.readInt();
-    Review[] arr = new Review[reviewList.size()];
+    Review[] arr = reviewDao.findAll().toArray(new Review[reviewDao.size()]);
+    Review[] selectedArr = new Review[arr.length];
     int count = 0;
-    for (int i = 0; i < reviewList.size(); i++) {
-      if (reviewList.get(i).getStarRate() == star) {
-        Review review = reviewList.get(i);
-        arr[count++] = review;
+    for (int i = 0; i < arr.length; i++) {
+      if (arr[i].getStarRate() == star) {
+        Review review = arr[i];
+        selectedArr[count++] = review;
       }
     }
-    arr = Arrays.copyOf(arr, count);
+    selectedArr = Arrays.copyOf(selectedArr, count);
     if (count == 0) {
       out.writeUTF("FAIL");
       out.writeUTF("해당 리뷰가 없습니다");
       return;
     }
     out.writeUTF("OK");
-    out.writeObject(arr);
+    out.writeObject(selectedArr);
   }
 }

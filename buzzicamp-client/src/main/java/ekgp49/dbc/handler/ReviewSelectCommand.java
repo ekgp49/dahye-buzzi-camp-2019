@@ -20,7 +20,7 @@ public class ReviewSelectCommand implements Command {
   public void execute() {
     int star = prompt.inputInt("별점: ");
     try {
-      out.writeUTF("/review/select");
+      out.writeUTF("/review/star");
       out.writeInt(star);
       out.flush();
 
