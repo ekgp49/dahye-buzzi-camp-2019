@@ -15,13 +15,13 @@ public class ReviewUpdateServlet implements Servlet {
   @Override
   public void service(ObjectOutputStream out, ObjectInputStream in) throws Exception {
     int no = in.readInt();
-    if (reviewDao.findByNo(no) == null) {
-      out.writeUTF("FAIL");
-      out.writeUTF("해당번호의 리뷰가 없습니다.");
+    if (reviewDao.findByNo(no) != null) {
+      out.writeUTF("OK");
+      out.flush();
       return;
     }
-    out.writeUTF("OK");
-    out.flush();
+    out.writeUTF("FAIL");
+    out.writeUTF("해당번호의 리뷰가 없습니다.");
     try {
       out.writeObject(reviewDao.findByNo(no));
       reviewDao.update((Review) in.readObject());

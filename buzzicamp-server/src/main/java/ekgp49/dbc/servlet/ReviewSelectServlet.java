@@ -26,12 +26,12 @@ public class ReviewSelectServlet implements Servlet {
       }
     }
     selectedArr = Arrays.copyOf(selectedArr, count);
-    if (count == 0) {
-      out.writeUTF("FAIL");
-      out.writeUTF("해당 리뷰가 없습니다");
+    if (count != 0) {
+      out.writeUTF("OK");
+      out.writeObject(selectedArr);
       return;
     }
-    out.writeUTF("OK");
-    out.writeObject(selectedArr);
+    out.writeUTF("FAIL");
+    out.writeUTF("해당 리뷰가 없습니다");
   }
 }
