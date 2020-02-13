@@ -1,49 +1,35 @@
 package ekgp49.dbc.handler;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.sql.Date;
+import ekgp49.dbc.dao.ReviewDao;
 import ekgp49.dbc.domain.Review;
 import util.Prompt;
 
 public class ReviewAddCommand implements Command {
   Prompt prompt;
-  ObjectOutputStream out;
-  ObjectInputStream in;
+  ReviewDao reviewDao;
 
-  public ReviewAddCommand(Prompt prompt, ObjectOutputStream out, ObjectInputStream in) {
+  public ReviewAddCommand(Prompt prompt, ReviewDao reviewDao) {
     this.prompt = prompt;
-    this.out = out;
-    this.in = in;
+    this.reviewDao = reviewDao;
   }
 
   @Override
   public void execute() {
+    System.out.println("리뷰");
+    Review review = new Review();
+    review.setCafeName(prompt.inputString("카페 상호: "));
+    review.setCustomer(prompt.inputString("고객: "));
+    review.setStarRate(prompt.inputInt("별점: "));
+    review.setContent(prompt.inputString("내용은: "));
+    review.setCreatedDate(new Date(System.currentTimeMillis()));
+    review.setTimeFormFromToday(String.format("%1$tp %1$tH:%1$tM:%1$tS ", new java.util.Date()));
+    review.setViewCount(0);
+
     try {
-      out.writeUTF("/review/add");
-      out.flush();
-      int no = in.readInt();
-      System.out.println("리뷰");
-      Review review = new Review();
-      review.setNo(no);
-      review.setCafeName(prompt.inputString("카페 상호: "));
-      review.setCustomer(prompt.inputString("고객: "));
-      review.setStarRate(prompt.inputInt("별점: "));
-      review.setContent(prompt.inputString("내용은: "));
-      review.setCreatedDate(new Date(System.currentTimeMillis()));
-      review.setTimeFormFromToday(String.format("%1$tp %1$tH:%1$tM:%1$tS ", new java.util.Date()));
-      review.setViewCount(0);
-
-      out.writeObject(review);
-      String response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
-      System.out.println(in.readUTF());
-
+      reviewDao.insert(review);
     } catch (Exception e) {
-      System.out.println("실행 중 오류 발생" + e.getMessage());
+      System.out.println(e.getMessage());
     }
   }
 }

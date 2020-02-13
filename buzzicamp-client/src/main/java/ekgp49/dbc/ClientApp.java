@@ -10,6 +10,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
+import ekgp49.dbc.dao.InformationDao;
+import ekgp49.dbc.dao.ReviewDao;
+import ekgp49.dbc.dao.proxy.InformationDaoProxy;
+import ekgp49.dbc.dao.proxy.ReviewDaoProxy;
 import ekgp49.dbc.handler.Command;
 import ekgp49.dbc.handler.InformationAddCommand;
 import ekgp49.dbc.handler.InformationDeleteCommand;
@@ -24,10 +28,8 @@ import ekgp49.dbc.handler.SearchCommand;
 import util.Prompt;
 
 public class ClientApp {
-
   Scanner keyboard = new Scanner(System.in);
   Prompt prompt = new Prompt(keyboard);
-
 
   public void service() {
 
@@ -51,17 +53,20 @@ public class ClientApp {
     Deque<String> commandStack = new ArrayDeque<>();
     Queue<String> commandQueue = new LinkedList<>();
 
+    InformationDao infoDao = new InformationDaoProxy(out, in);
+    ReviewDao reviewDao = new ReviewDaoProxy(out, in);
+
     HashMap<String, Command> commandMap = new HashMap<>();
-    commandMap.put("/search", new SearchCommand(prompt, out, in));
-    commandMap.put("/info/add", new InformationAddCommand(prompt, out, in));
-    commandMap.put("/info/list", new InformationListCommand(out, in));
-    commandMap.put("/info/update", new InformationUpdateCommand(prompt, out, in));
-    commandMap.put("/info/delete", new InformationDeleteCommand(prompt, out, in));
-    commandMap.put("/review/add", new ReviewAddCommand(prompt, out, in));
-    commandMap.put("/review/list", new ReviewListCommand(out, in));
-    commandMap.put("/review/update", new ReviewUpdateCommand(prompt, out, in));
-    commandMap.put("/review/delete", new ReviewDeleteCommand(prompt, out, in));
-    commandMap.put("/review/star", new ReviewSelectCommand(prompt, out, in));
+    commandMap.put("/search", new SearchCommand(prompt, infoDao));
+    commandMap.put("/info/add", new InformationAddCommand(prompt, infoDao));
+    commandMap.put("/info/list", new InformationListCommand(infoDao));
+    commandMap.put("/info/update", new InformationUpdateCommand(prompt, infoDao));
+    commandMap.put("/info/delete", new InformationDeleteCommand(prompt, infoDao));
+    commandMap.put("/review/add", new ReviewAddCommand(prompt, reviewDao));
+    commandMap.put("/review/list", new ReviewListCommand(reviewDao));
+    commandMap.put("/review/update", new ReviewUpdateCommand(prompt, reviewDao));
+    commandMap.put("/review/delete", new ReviewDeleteCommand(prompt, reviewDao));
+    commandMap.put("/review/star", new ReviewSelectCommand(prompt, reviewDao));
 
     String command;
     try {

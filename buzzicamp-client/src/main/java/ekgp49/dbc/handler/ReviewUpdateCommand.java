@@ -1,34 +1,23 @@
 package ekgp49.dbc.handler;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import ekgp49.dbc.dao.ReviewDao;
 import ekgp49.dbc.domain.Review;
 import util.Prompt;
 
 public class ReviewUpdateCommand implements Command {
   Prompt prompt;
-  ObjectOutputStream out;
-  ObjectInputStream in;
+  ReviewDao reviewDao;
 
-  public ReviewUpdateCommand(Prompt prompt, ObjectOutputStream out, ObjectInputStream in) {
+  public ReviewUpdateCommand(Prompt prompt, ReviewDao reviewDao) {
     this.prompt = prompt;
-    this.out = out;
-    this.in = in;
+    this.reviewDao = reviewDao;
   }
 
   @Override
   public void execute() {
     int no = prompt.inputInt("리뷰 번호는? ");
     try {
-      out.writeUTF("/review/update");
-      out.writeInt(no);
-      out.flush();
-      String response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
-      Review old = (Review) in.readObject();
+      Review old = reviewDao.findByNo(no);
 
       String answer = prompt.inputString("리뷰를 변경하시겠습니까? (Y/n)");
       if (!answer.equalsIgnoreCase("y")) {
@@ -50,14 +39,9 @@ public class ReviewUpdateCommand implements Command {
         System.out.println("리뷰 변경을 취소했습니다.");
         return;
       }
-      out.writeObject(review);
-      if (in.readUTF().equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
-      System.out.println(in.readUTF());
+      reviewDao.update(review);
     } catch (Exception e) {
-      System.out.println("실행 중 오류 발생" + e.getMessage());
+      System.out.println(e.getMessage());
     }
   }
 }

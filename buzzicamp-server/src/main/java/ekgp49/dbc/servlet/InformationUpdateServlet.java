@@ -16,13 +16,13 @@ public class InformationUpdateServlet implements Servlet {
   public void service(ObjectOutputStream out, ObjectInputStream in) throws Exception {
     int no = in.readInt();
     Information info = infoDao.findByNo(no);
-    if (info != null) {
-      out.writeUTF("OK");
-      out.flush();
+    if (info == null) {
+      out.writeUTF("FAIL");
+      out.writeUTF("해당번호의 회원정보이 없습니다.");
       return;
     }
-    out.writeUTF("FAIL");
-    out.writeUTF("해당번호의 회원정보이 없습니다.");
+    out.writeUTF("OK");
+    out.flush();
     try {
       out.writeObject(info);
       infoDao.update((Information) in.readObject());

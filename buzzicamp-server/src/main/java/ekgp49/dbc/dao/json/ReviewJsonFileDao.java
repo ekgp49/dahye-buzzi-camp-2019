@@ -1,5 +1,6 @@
 package ekgp49.dbc.dao.json;
 
+import java.util.Arrays;
 import java.util.List;
 import ekgp49.dbc.dao.ReviewDao;
 import ekgp49.dbc.domain.Review;
@@ -77,5 +78,19 @@ public class ReviewJsonFileDao extends AbstractJsonFileDao<Review> implements Re
   @Override
   public int size() throws Exception {
     return super.size();
+  }
+
+  @Override
+  public Review[] selectStar(int no) throws Exception {
+    Review[] arr = this.findAll().toArray(new Review[this.size()]);
+    Review[] selectedArr = new Review[arr.length];
+    int count = 0;
+    for (int i = 0; i < arr.length; i++) {
+      if (arr[i].getStarRate() == no) {
+        Review review = arr[i];
+        selectedArr[count++] = review;
+      }
+    }
+    return Arrays.copyOf(selectedArr, count);
   }
 }

@@ -1,40 +1,29 @@
 package ekgp49.dbc.handler;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.List;
+import ekgp49.dbc.dao.InformationDao;
 import ekgp49.dbc.domain.Information;
 import ekgp49.dbc.domain.Search;
 import util.Prompt;
 
 public class SearchCommand implements Command {
   Prompt prompt;
-  ObjectOutputStream out;
-  ObjectInputStream in;
+  InformationDao infoDao;
 
-  public SearchCommand(Prompt prompt, ObjectOutputStream out, ObjectInputStream in) {
+  public SearchCommand(Prompt prompt, InformationDao infoDao) {
     this.prompt = prompt;
-    this.out = out;
-    this.in = in;
+    this.infoDao = infoDao;
   }
 
-  @SuppressWarnings("unchecked")
   @Override
   public void execute() {
     Information[] info = null;
     try {
-      out.writeUTF("/search");
-      out.flush();
-      String response = in.readUTF();
-      if (response.equals("FAIL")) {
-        System.out.println(in.readUTF());
-        return;
-      }
-      List<Information> infos = (List<Information>) in.readObject();
+      List<Information> infos = infoDao.findAll();
       info = infos.toArray(new Information[] {});
     } catch (Exception e) {
-      System.out.println("실행 중 오류 발생" + e.getMessage());
+      System.out.println(e.getMessage());
     }
 
     Search search = new Search();

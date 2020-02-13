@@ -68,7 +68,6 @@ public class InformationObjectFileDao extends AbstractObjectFileDao<Information>
     return index;
   }
 
-  @Override
   public int getConcreteNo() throws Exception {
     int no = list.size() == 0 ? 1 : list.get(list.size() - 1).getNo() + 1;
     return no;
