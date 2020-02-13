@@ -93,41 +93,34 @@ public class ServerApp {
         ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
         ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
 
-      while (true) {
-        String request = in.readUTF();
-        System.out.println(request);
-        System.out.println("클라이언트가 보낸 메시지를 수신하였음!");
+      String request = in.readUTF();
+      System.out.println(request);
+      System.out.println("클라이언트가 보낸 메시지를 수신하였음!");
 
-        switch (request) {
-          case "quit":
-            quit(out);
-            return 0;
-          case "/server/stop":
-            quit(out);
-            return 9;
-        }
-
-        Servlet servlet = servletMap.get(request);
-        if (servlet != null) {
-          try {
-            servlet.service(out, in);
-          } catch (Exception e) {
-            out.writeUTF("FAIL");
-            out.writeUTF("요청처리 중 오류 발생: " + e.getMessage());
-            System.out.println("클라이언트 요청 처리 중 오류 발생");
-          }
-        } else {
-          notFount(out);
-        }
-
-        out.flush();
-        System.out.println("클라이언트에게 응답하였음");
+      if (request.equalsIgnoreCase("/server/stop")) {
+        quit(out);
+        return 9;
       }
+
+      Servlet servlet = servletMap.get(request);
+      if (servlet != null) {
+        try {
+          servlet.service(out, in);
+        } catch (Exception e) {
+          out.writeUTF("FAIL");
+          out.writeUTF("요청처리 중 오류 발생: " + e.getMessage());
+          System.out.println("클라이언트 요청 처리 중 오류 발생");
+        }
+      } else {
+        notFount(out);
+      }
+      out.flush();
+      System.out.println("클라이언트에게 응답하였음");
     } catch (Exception e) {
       System.out.println("서버 문제 발생");
       e.printStackTrace();
-      return -1;
     }
+    return 0;
   }
 
 
