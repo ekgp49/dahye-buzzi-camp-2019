@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import ekgp49.dbc.context.ApplicationContextListener;
 import ekgp49.dbc.dao.InformationDao;
 import ekgp49.dbc.dao.ReviewDao;
@@ -28,6 +30,7 @@ public class ServerApp {
   Set<ApplicationContextListener> listeners = new HashSet<>();
   Map<String, Object> context = new HashMap<>();
   Map<String, Servlet> servletMap = new HashMap<>();
+  ExecutorService executorService = Executors.newCachedThreadPool();
 
   public void addListener(ApplicationContextListener listener) {
     listeners.add(listener);
@@ -73,13 +76,13 @@ public class ServerApp {
     try (ServerSocket serverSocket = new ServerSocket(9999)) {
       System.out.println("클라이언트 연결 대기중...");
       while (true) {
-        Socket socket = serverSocket.accept();
-        System.out.println("클라이언트와 연결되었음");
-        new Thread(() -> {
-          processRequest(socket);
-          System.out.println("-------------연결 종료---------------");
-        }).start();
+        try (Socket socket = serverSocket.accept()) {
+          executorService.submit(() -> {
+            processRequest(socket);
+            System.out.println("-------------연결 종료---------------");
+          });
 
+        }
       }
     } catch (Exception e) {
       System.out.println("서버 문제 발생");
@@ -120,7 +123,6 @@ public class ServerApp {
     } catch (Exception e) {
       System.out.println("서버 문제 발생");
       e.printStackTrace();
-      return -1;
     }
     return 0;
   }
