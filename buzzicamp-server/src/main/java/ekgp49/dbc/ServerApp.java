@@ -76,13 +76,13 @@ public class ServerApp {
     try (ServerSocket serverSocket = new ServerSocket(9999)) {
       System.out.println("클라이언트 연결 대기중...");
       while (true) {
-        try (Socket socket = serverSocket.accept()) {
-          executorService.submit(() -> {
-            processRequest(socket);
-            System.out.println("-------------연결 종료---------------");
-          });
+        Socket socket = serverSocket.accept(); // 여기에 try{} 걸면 소켓 닫혀서 오류남
+        executorService.submit(() -> {
+          processRequest(socket);
+          System.out.println("-------------연결 종료---------------");
+        });
 
-        }
+
       }
     } catch (Exception e) {
       System.out.println("서버 문제 발생");
