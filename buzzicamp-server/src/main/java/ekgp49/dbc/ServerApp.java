@@ -73,12 +73,13 @@ public class ServerApp {
     try (ServerSocket serverSocket = new ServerSocket(9999)) {
       System.out.println("클라이언트 연결 대기중...");
       while (true) {
-        try (Socket socket = serverSocket.accept()) {
-          if (processRequest(socket) == 9) {
-            break;
-          }
-        }
-        System.out.println("-------------연결 종료---------------");
+        Socket socket = serverSocket.accept();
+        System.out.println("클라이언트와 연결되었음");
+        new Thread(() -> {
+          processRequest(socket);
+          System.out.println("-------------연결 종료---------------");
+        }).start();
+
       }
     } catch (Exception e) {
       System.out.println("서버 문제 발생");
@@ -119,6 +120,7 @@ public class ServerApp {
     } catch (Exception e) {
       System.out.println("서버 문제 발생");
       e.printStackTrace();
+      return -1;
     }
     return 0;
   }

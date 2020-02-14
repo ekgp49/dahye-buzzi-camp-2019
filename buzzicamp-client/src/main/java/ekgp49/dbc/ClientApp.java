@@ -12,6 +12,7 @@ import java.util.Queue;
 import java.util.Scanner;
 import ekgp49.dbc.dao.InformationDao;
 import ekgp49.dbc.dao.ReviewDao;
+import ekgp49.dbc.dao.proxy.DaoProxyHelper;
 import ekgp49.dbc.dao.proxy.InformationDaoProxy;
 import ekgp49.dbc.dao.proxy.ReviewDaoProxy;
 import ekgp49.dbc.handler.Command;
@@ -43,8 +44,10 @@ public class ClientApp {
     commandQueue = new LinkedList<>();
     commandMap = new HashMap<>();
 
-    infoDao = new InformationDaoProxy("localhost", 9999);
-    reviewDao = new ReviewDaoProxy("localhost", 9999);
+
+    DaoProxyHelper daoProxyHelper = new DaoProxyHelper("localhost", 9999);
+    infoDao = new InformationDaoProxy(daoProxyHelper);
+    reviewDao = new ReviewDaoProxy(daoProxyHelper);
 
     commandMap.put("/search", new SearchCommand(prompt, infoDao));
     commandMap.put("/info/add", new InformationAddCommand(prompt, infoDao));
