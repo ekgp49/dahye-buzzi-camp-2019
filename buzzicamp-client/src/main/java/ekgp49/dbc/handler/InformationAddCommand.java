@@ -27,8 +27,9 @@ public class InformationAddCommand implements Command {
 
     try {
       infoDao.insert(information);
+      System.out.println("저장했습니다");
     } catch (Exception e) {
-      System.out.println(e.getMessage());
+      System.out.println("저장 실패");
     }
   }
 }

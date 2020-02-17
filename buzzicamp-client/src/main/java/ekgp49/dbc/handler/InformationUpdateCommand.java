@@ -20,7 +20,7 @@ public class InformationUpdateCommand implements Command {
     try {
       old = infoDao.findByNo(no);
     } catch (Exception e) {
-      System.out.println(e.getMessage());
+      System.out.println("해당 번호의 게시글이 없습니다.");
       return;
     }
 
@@ -68,6 +68,7 @@ public class InformationUpdateCommand implements Command {
 
     try {
       infoDao.update(old);
+      System.out.println("정보를 변경했습니다.");
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }

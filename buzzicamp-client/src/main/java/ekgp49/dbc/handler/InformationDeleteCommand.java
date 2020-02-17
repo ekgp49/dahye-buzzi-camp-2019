@@ -16,7 +16,11 @@ public class InformationDeleteCommand implements Command {
   public void execute() {
     int no = prompt.inputInt("가게 정보 번호: ");
     try {
-      infoDao.delete(no);
+      if (infoDao.delete(no) > 0) {
+        System.out.println("삭제했습니다.");
+      } else {
+        System.out.println("해당하는 번호의 정보가 없습니다.");
+      }
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }

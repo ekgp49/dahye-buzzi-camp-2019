@@ -1,8 +1,7 @@
 package ekgp49.dbc;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
@@ -12,9 +11,8 @@ import java.util.Queue;
 import java.util.Scanner;
 import ekgp49.dbc.dao.InformationDao;
 import ekgp49.dbc.dao.ReviewDao;
-import ekgp49.dbc.dao.proxy.DaoProxyHelper;
-import ekgp49.dbc.dao.proxy.InformationDaoProxy;
-import ekgp49.dbc.dao.proxy.ReviewDaoProxy;
+import ekgp49.dbc.dao.mariadb.InformationDaoImpl;
+import ekgp49.dbc.dao.mariadb.ReviewDaoImpl;
 import ekgp49.dbc.handler.Command;
 import ekgp49.dbc.handler.InformationAddCommand;
 import ekgp49.dbc.handler.InformationDeleteCommand;
@@ -34,20 +32,28 @@ public class ClientApp {
 
   Deque<String> commandStack;
   Queue<String> commandQueue;
-  String command;
+
   HashMap<String, Command> commandMap;
+
+  Connection con;
   InformationDao infoDao;
   ReviewDao reviewDao;
 
-  public ClientApp() {
+  String command;
+
+  public ClientApp() throws Exception {
     commandStack = new ArrayDeque<>();
     commandQueue = new LinkedList<>();
     commandMap = new HashMap<>();
 
+    Class.forName("org.mariadb.jdbc.Driver");
+    con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/myproject", "buzzi", "1111");
 
-    DaoProxyHelper daoProxyHelper = new DaoProxyHelper("localhost", 9999);
-    infoDao = new InformationDaoProxy(daoProxyHelper);
-    reviewDao = new ReviewDaoProxy(daoProxyHelper);
+    // DaoProxyHelper daoProxyHelper = new DaoProxyHelper("localhost", 9999);
+    // infoDao = new InformationDaoProxy(daoProxyHelper);
+    // reviewDao = new ReviewDaoProxy(daoProxyHelper);
+    infoDao = new InformationDaoImpl(con);
+    reviewDao = new ReviewDaoImpl(con);
 
     commandMap.put("/search", new SearchCommand(prompt, infoDao));
     commandMap.put("/info/add", new InformationAddCommand(prompt, infoDao));
@@ -59,19 +65,6 @@ public class ClientApp {
     commandMap.put("/review/update", new ReviewUpdateCommand(prompt, reviewDao));
     commandMap.put("/review/delete", new ReviewDeleteCommand(prompt, reviewDao));
     commandMap.put("/review/star", new ReviewSelectCommand(prompt, reviewDao));
-    commandMap.put("/server/stop", () -> {
-      try {
-        try (Socket socket = new Socket("localhost", 9999);
-            ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-            ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
-          out.writeUTF(command);
-          out.flush();
-          System.out.println("종료합니다.");
-        }
-      } catch (Exception e) {
-        //
-      }
-    });
   }
 
   public void service() {
@@ -97,8 +90,12 @@ public class ClientApp {
 
       processCommand();
     }
-
     keyboard.close();
+
+    try {
+      con.close();
+    } catch (Exception e) {
+    }
   }
 
   private void processCommand() {
@@ -129,10 +126,9 @@ public class ClientApp {
     }
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws Exception {
     ClientApp app = new ClientApp();
     app.service();
-
   }
 
 }

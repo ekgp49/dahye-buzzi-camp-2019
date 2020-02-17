@@ -16,7 +16,11 @@ public class ReviewDeleteCommand implements Command {
   public void execute() {
     int no = prompt.inputInt("리뷰 번호는 ");
     try {
-      reviewDao.delete(no);
+      if (reviewDao.delete(no) > 0) {
+        System.out.println("삭제했습니다.");
+      } else {
+        System.out.println("해당하는 번호의 리뷰가 없습니다.");
+      }
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }

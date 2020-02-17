@@ -28,8 +28,9 @@ public class ReviewAddCommand implements Command {
 
     try {
       reviewDao.insert(review);
+      System.out.println("저장했습니다.");
     } catch (Exception e) {
-      System.out.println(e.getMessage());
+      System.out.println("저장 실패");
     }
   }
 }
