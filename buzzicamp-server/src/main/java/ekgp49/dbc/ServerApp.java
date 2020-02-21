@@ -1,13 +1,13 @@
 package ekgp49.dbc;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -94,10 +94,10 @@ public class ServerApp {
 
   int processRequest(Socket clientSocket) {
     try (Socket socket = clientSocket;
-        ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
-        ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+        PrintStream out = new PrintStream(socket.getOutputStream());
+        Scanner in = new Scanner(socket.getInputStream())) {
 
-      String request = in.readUTF();
+      String request = in.nextLine();
       System.out.println(request);
       System.out.println("클라이언트가 보낸 메시지를 수신하였음!");
 
@@ -110,10 +110,11 @@ public class ServerApp {
       if (servlet != null) {
         try {
           servlet.service(out, in);
+          out.println("!end!");
         } catch (Exception e) {
-          out.writeUTF("FAIL");
-          out.writeUTF("요청처리 중 오류 발생: " + e.getMessage());
+          out.println("요청처리 중 오류 발생: " + e.getMessage());
           System.out.println("클라이언트 요청 처리 중 오류 발생");
+          e.printStackTrace();
         }
       } else {
         notFount(out);
@@ -128,12 +129,11 @@ public class ServerApp {
   }
 
 
-  private void notFount(ObjectOutputStream out) throws IOException {
-    out.writeUTF("FAIL");
-    out.writeUTF("요청한 명령을 처리할 수 없습니다");
+  private void notFount(PrintStream out) throws IOException {
+    out.println("요청한 명령을 처리할 수 없습니다");
   }
 
-  private void quit(ObjectOutputStream out) throws IOException {
+  private void quit(PrintStream out) throws IOException {
     // 여기서 out.write("OK"); 했더니 /server/stop할 때마다 자꾸 예외떠서 안에 있는 코드 없앴더니 안뜸
   }
 

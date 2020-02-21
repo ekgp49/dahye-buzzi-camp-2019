@@ -1,21 +1,30 @@
 package ekgp49.dbc;
 
+import java.sql.DriverManager;
 import java.util.Map;
 import ekgp49.dbc.context.ApplicationContextListener;
-import ekgp49.dbc.dao.json.InformationJsonFileDao;
-import ekgp49.dbc.dao.json.ReviewJsonFileDao;
+import ekgp49.dbc.dao.mariadb.InformationDaoImpl;
+import ekgp49.dbc.dao.mariadb.ReviewDaoImpl;
 
 public class DataLoaderListener implements ApplicationContextListener {
+  java.sql.Connection con;
 
   @Override
   public void contextInitialized(Map<String, Object> context) {
-    context.put("infoDao", new InformationJsonFileDao("./information.json"));
-    context.put("reviewDao", new ReviewJsonFileDao("./review.json"));
+    try {
+      con = DriverManager.getConnection("jdbc:mariadb://localhost:3306/myproject", "buzzi", "1111");
+      context.put("infoDao", new InformationDaoImpl(con));
+      context.put("reviewDao", new ReviewDaoImpl(con));
+    } catch (Exception e) {
+    }
   }
 
   @Override
   public void contextDestroyed(Map<String, Object> context) {
-
     System.out.println("데이터를 저장합니다.");
+    try {
+      con.close();
+    } catch (Exception e) {
+    }
   }
 }
