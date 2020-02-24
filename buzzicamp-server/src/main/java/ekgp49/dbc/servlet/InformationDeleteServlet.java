@@ -1,7 +1,7 @@
 package ekgp49.dbc.servlet;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.PrintStream;
+import java.util.Scanner;
 import ekgp49.dbc.dao.InformationDao;
 
 public class InformationDeleteServlet implements Servlet {
@@ -12,16 +12,15 @@ public class InformationDeleteServlet implements Servlet {
   }
 
   @Override
-  public void service(ObjectOutputStream out, ObjectInputStream in) throws Exception {
-    int no = in.readInt();
-    if (infoDao.findByNo(no) == null) {
-      out.writeUTF("FAIL");
-      out.writeUTF("해당번호의 회원정보이 없습니다.");
-    } else {
-      out.writeUTF("OK");
-      infoDao.delete(no);
-      out.writeUTF("정보를 삭제했습니다.");
-    }
+  public void service(PrintStream out, Scanner in) throws Exception {
+    out.println("번호? \n!{}!");
     out.flush();
+    int no = Integer.parseInt(in.nextLine());
+
+    if (infoDao.delete(no) > 0) {
+      out.println("삭제했습니다.");
+    } else {
+      out.println("번호가 유효하지 않습니다.");
+    }
   }
 }

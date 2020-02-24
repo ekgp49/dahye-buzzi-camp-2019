@@ -1,6 +1,7 @@
 package ekgp49.dbc.dao.mariadb;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -85,10 +86,33 @@ public class InformationDaoImpl implements InformationDao {
     }
   }
 
-
   @Override
-  public int getConcreteNo() throws Exception {
-    return 0;
-  }
+  public List<Information> search(String keyword) throws Exception {
+    try (PreparedStatement stmt =
+        con.prepareStatement("select * from information where name like concat ('%', ?, '%')"
+            + " or addr like concat ('%', ?, '%') or menu like concat ('%', ?, '%')")) {
 
+      stmt.setString(1, keyword);
+      stmt.setString(2, keyword);
+      stmt.setString(3, keyword);
+
+      ResultSet rs = stmt.executeQuery();
+      ArrayList<Information> list = new ArrayList<>();
+      while (rs.next()) {
+        Information info = new Information();
+        info.setCafeAddress(rs.getString("addr"));
+        info.setCafeCall(rs.getString("tel"));
+        info.setCafeMenu(rs.getString("menu"));
+        info.setCafeName(rs.getString("name"));
+        info.setCafeWebSite(rs.getString("web"));
+        info.setCloseTime(rs.getString("cl_t"));
+        info.setHolliday(rs.getString("hol_day"));
+        info.setNo(rs.getInt("information_id"));
+        info.setOpenTime(rs.getString("op_t"));
+        list.add(info);
+      }
+      rs.close();
+      return list;
+    }
+  }
 }

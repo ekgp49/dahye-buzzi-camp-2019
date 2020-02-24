@@ -15,9 +15,5 @@ public interface ReviewDao {
 
   List<Review> findAll() throws Exception;
 
-  int getConcreteNo() throws Exception;
-
-  int size() throws Exception;
-
-  Review[] selectStar(int no) throws Exception;
+  List<Review> selectStar(int no) throws Exception;
 }

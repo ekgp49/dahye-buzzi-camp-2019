@@ -8,9 +8,9 @@ public class Review implements Serializable {
   private static final long serialVersionUID = 20200131L;
 
   public String toCsvString() {
-    return String.format("%d,%s,%s,%d,%s,%s,%s,%s", this.getNo(), this.getCafeName(),
+    return String.format("%d,%s,%s,%d,%s,%s,%s", this.getNo(), this.getCafeName(),
         this.getCustomer(), this.getStarRate(), this.getContent(), this.getViewCount(),
-        this.getCreatedDate(), this.getTimeFormFromToday());
+        this.getCreatedDate());
   }
 
   public static Review valueOf(String csv) {
@@ -23,7 +23,6 @@ public class Review implements Serializable {
     review.setContent(data[4]);
     review.setViewCount(Integer.parseInt(data[5]));
     review.setCreatedDate(Date.valueOf(data[6]));
-    review.setTimeFormFromToday(data[7]);
     return review;
   }
 
@@ -34,7 +33,6 @@ public class Review implements Serializable {
   private String content;
   private int viewCount;
   private Date createdDate;
-  private String timeFormFromToday;
 
   @Override
   public int hashCode() {
@@ -46,7 +44,6 @@ public class Review implements Serializable {
     result = prime * result + (customer == null ? 0 : customer.hashCode());
     result = prime * result + no;
     result = prime * result + starRate;
-    result = prime * result + (timeFormFromToday == null ? 0 : timeFormFromToday.hashCode());
     result = prime * result + viewCount;
     return result;
   }
@@ -84,14 +81,16 @@ public class Review implements Serializable {
       return false;
     if (starRate != other.starRate)
       return false;
-    if (timeFormFromToday == null) {
-      if (other.timeFormFromToday != null)
-        return false;
-    } else if (!timeFormFromToday.equals(other.timeFormFromToday))
-      return false;
     if (viewCount != other.viewCount)
       return false;
     return true;
+  }
+
+  @Override
+  public String toString() {
+    return "Review [no=" + no + ", cafeName=" + cafeName + ", customer=" + customer + ", starRate="
+        + starRate + ", content=" + content + ", viewCount=" + viewCount + ", createdDate="
+        + createdDate + "]";
   }
 
   public int getNo() {
@@ -150,11 +149,4 @@ public class Review implements Serializable {
     this.createdDate = createdDate;
   }
 
-  public String getTimeFormFromToday() {
-    return timeFormFromToday;
-  }
-
-  public void setTimeFormFromToday(String timeFormFromToday) {
-    this.timeFormFromToday = timeFormFromToday;
-  }
 }

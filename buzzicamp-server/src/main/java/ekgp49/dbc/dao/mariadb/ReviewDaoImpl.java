@@ -20,8 +20,7 @@ public class ReviewDaoImpl implements ReviewDao {
     Statement stmt = con.createStatement();
     return stmt.executeUpdate("insert into review(name, customer, rate, conts, vw_cnt, time_fr_td)"
         + " values('" + review.getCafeName() + "', '" + review.getCustomer() + "', "
-        + review.getStarRate() + ", '" + review.getContent() + "', " + review.getViewCount() + ", '"
-        + review.getTimeFormFromToday() + "')");
+        + review.getStarRate() + ", '" + review.getContent() + "', " + review.getViewCount() + ")");
   }
 
   @Override
@@ -49,7 +48,6 @@ public class ReviewDaoImpl implements ReviewDao {
       review.setCustomer(rs.getString("customer"));
       review.setNo(rs.getInt("review_id"));
       review.setStarRate(rs.getInt("rate"));
-      review.setTimeFormFromToday(rs.getString("time_fr_td"));
       review.setViewCount(rs.getInt("vw_cnt"));
       return review;
     } else {
@@ -71,7 +69,6 @@ public class ReviewDaoImpl implements ReviewDao {
       review.setCustomer(rs.getString("customer"));
       review.setNo(rs.getInt("review_id"));
       review.setStarRate(rs.getInt("rate"));
-      review.setTimeFormFromToday(rs.getString("time_fr_td"));
       review.setViewCount(rs.getInt("vw_cnt"));
       list.add(review);
     }
@@ -79,19 +76,7 @@ public class ReviewDaoImpl implements ReviewDao {
   }
 
   @Override
-  public int getConcreteNo() throws Exception {
-    // TODO Auto-generated method stub
-    return 0;
-  }
-
-  @Override
-  public int size() throws Exception {
-    // TODO Auto-generated method stub
-    return 0;
-  }
-
-  @Override
-  public Review[] selectStar(int no) throws Exception {
+  public List<Review> selectStar(int no) throws Exception {
     Statement stmt = con.createStatement();
     ResultSet rs = stmt.executeQuery("select * from review where rate=" + no);
     ArrayList<Review> list = new ArrayList<>();
@@ -104,11 +89,10 @@ public class ReviewDaoImpl implements ReviewDao {
       review.setCustomer(rs.getString("customer"));
       review.setNo(rs.getInt("review_id"));
       review.setStarRate(rs.getInt("rate"));
-      review.setTimeFormFromToday(rs.getString("time_fr_td"));
       review.setViewCount(rs.getInt("vw_cnt"));
       list.add(review);
     }
-    return (Review[]) list.toArray();
+    return list;
   }
 
 }

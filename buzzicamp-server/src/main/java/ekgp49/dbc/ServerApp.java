@@ -17,6 +17,7 @@ import ekgp49.dbc.dao.ReviewDao;
 import ekgp49.dbc.servlet.InformationAddServlet;
 import ekgp49.dbc.servlet.InformationDeleteServlet;
 import ekgp49.dbc.servlet.InformationListServlet;
+import ekgp49.dbc.servlet.InformationSearchServlet;
 import ekgp49.dbc.servlet.InformationUpdateServlet;
 import ekgp49.dbc.servlet.ReviewAddServlet;
 import ekgp49.dbc.servlet.ReviewDeleteServlet;
@@ -31,6 +32,7 @@ public class ServerApp {
   Map<String, Object> context = new HashMap<>();
   Map<String, Servlet> servletMap = new HashMap<>();
   ExecutorService executorService = Executors.newCachedThreadPool();
+  boolean serverStop = false;
 
   public void addListener(ApplicationContextListener listener) {
     listeners.add(listener);
@@ -66,12 +68,12 @@ public class ServerApp {
     servletMap.put("/info/delete", new InformationDeleteServlet(infoDao));
     servletMap.put("/info/list", new InformationListServlet(infoDao));
     servletMap.put("/info/update", new InformationUpdateServlet(infoDao));
+    servletMap.put("/info/search", new InformationSearchServlet(infoDao));
     servletMap.put("/review/add", new ReviewAddServlet(reviewDao));
     servletMap.put("/review/delete", new ReviewDeleteServlet(reviewDao));
     servletMap.put("/review/list", new ReviewListServlet(reviewDao));
     servletMap.put("/review/star", new ReviewSelectServlet(reviewDao));
     servletMap.put("/review/update", new ReviewUpdateServlet(reviewDao));
-    servletMap.put("/search", new InformationListServlet(infoDao));
 
     try (ServerSocket serverSocket = new ServerSocket(9999)) {
       System.out.println("클라이언트 연결 대기중...");
@@ -82,17 +84,33 @@ public class ServerApp {
           System.out.println("-------------연결 종료---------------");
         });
 
-
+        if (serverStop == true) {
+          break;
+        }
       }
+
+
     } catch (Exception e) {
       System.out.println("서버 문제 발생");
       e.printStackTrace();
     }
+    executorService.shutdown();
+    while (true) {
+      if (executorService.isTerminated()) {
+        break;
+      }
+      try {
+        Thread.sleep(500);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
     notifyApplicationDestroyed();
+    System.out.println("서버 종료");
   }
 
 
-  int processRequest(Socket clientSocket) {
+  void processRequest(Socket clientSocket) {
     try (Socket socket = clientSocket;
         PrintStream out = new PrintStream(socket.getOutputStream());
         Scanner in = new Scanner(socket.getInputStream())) {
@@ -103,7 +121,6 @@ public class ServerApp {
 
       if (request.equalsIgnoreCase("/server/stop")) {
         quit(out);
-        return 9;
       }
 
       Servlet servlet = servletMap.get(request);
@@ -125,7 +142,6 @@ public class ServerApp {
       System.out.println("서버 문제 발생");
       e.printStackTrace();
     }
-    return 0;
   }
 
 
@@ -134,7 +150,9 @@ public class ServerApp {
   }
 
   private void quit(PrintStream out) throws IOException {
-    // 여기서 out.write("OK"); 했더니 /server/stop할 때마다 자꾸 예외떠서 안에 있는 코드 없앴더니 안뜸
+    out.println("OK");
+    out.println("!end!");
+    serverStop = true;
   }
 
   public static void main(String[] args) {

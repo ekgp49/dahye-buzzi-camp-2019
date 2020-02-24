@@ -1,7 +1,7 @@
 package ekgp49.dbc.servlet;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.PrintStream;
+import java.util.Scanner;
 import ekgp49.dbc.dao.ReviewDao;
 import ekgp49.dbc.domain.Review;
 
@@ -13,13 +13,21 @@ public class ReviewAddServlet implements Servlet {
   }
 
   @Override
-  public void service(ObjectOutputStream out, ObjectInputStream in) throws Exception {
-    int no = reviewDao.getConcreteNo();
-    out.writeInt(no);
-    out.flush();
-    reviewDao.insert((Review) in.readObject());
-    out.writeUTF("OK");
-    out.writeUTF("정보를 저장했습니다.");
-    out.flush();
+  public void service(PrintStream out, Scanner in) throws Exception {
+    Review review = new Review();
+    out.println("상호? \n!{}!");
+    review.setCafeName(in.nextLine());
+    out.println("고객명? \n!{}!");
+    review.setCustomer(in.nextLine());
+    out.println("별점? \n!{}!");
+    review.setStarRate(Integer.parseInt(in.nextLine()));
+    out.println("내용?? \n!{}!");
+    review.setContent(in.nextLine());
+
+    if (reviewDao.insert(review) > 0) {
+      out.println("새 리뷰를 저장했습니다.");
+    } else {
+      out.println("새 리뷰 저장 실패");
+    }
   }
 }

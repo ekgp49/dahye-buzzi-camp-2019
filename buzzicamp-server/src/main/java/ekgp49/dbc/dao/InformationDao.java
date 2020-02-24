@@ -15,5 +15,5 @@ public interface InformationDao {
 
   List<Information> findAll() throws Exception;
 
-  int getConcreteNo() throws Exception;
+  List<Information> search(String keyword) throws Exception;
 }

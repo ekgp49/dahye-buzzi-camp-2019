@@ -47,6 +47,10 @@ public class ClientApp {
         break;
       }
 
+      if (command.endsWith("/server/stop")) {
+        processCommand();
+      }
+
       commandStack.push(command);
       commandQueue.offer(command);
 
@@ -84,6 +88,7 @@ public class ClientApp {
           break;
         } else if (response.equals("!{}!")) {
           out.println(prompt.inputString(""));
+          out.flush();
         } else {
           System.out.println(response);
         }
@@ -91,7 +96,6 @@ public class ClientApp {
     } catch (Exception e) {
       System.out.println(e.getMessage());
     }
-    System.out.println("서버연결종료");
   }
 
 
