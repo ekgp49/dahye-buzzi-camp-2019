@@ -20,6 +20,7 @@ public class ReviewListServlet implements Servlet {
     for (Review r : list) {
       out.printf("%d, %s, %s, %s, %s, %s \n%s\n", r.getNo(), r.getCafeName(), r.getCustomer(),
           r.getStarRate(), r.getCreatedDate(), r.getViewCount(), r.getContent());
+      out.flush();
     }
   }
 }

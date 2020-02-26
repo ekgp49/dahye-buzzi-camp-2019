@@ -12,17 +12,19 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import ekgp49.dbc.context.ApplicationContextListener;
+import ekgp49.dbc.dao.InfoMenuDao;
 import ekgp49.dbc.dao.InformationDao;
 import ekgp49.dbc.dao.ReviewDao;
 import ekgp49.dbc.servlet.InformationAddServlet;
 import ekgp49.dbc.servlet.InformationDeleteServlet;
+import ekgp49.dbc.servlet.InformationDetailServlet;
 import ekgp49.dbc.servlet.InformationListServlet;
 import ekgp49.dbc.servlet.InformationSearchServlet;
 import ekgp49.dbc.servlet.InformationUpdateServlet;
 import ekgp49.dbc.servlet.ReviewAddServlet;
 import ekgp49.dbc.servlet.ReviewDeleteServlet;
 import ekgp49.dbc.servlet.ReviewListServlet;
-import ekgp49.dbc.servlet.ReviewSelectServlet;
+import ekgp49.dbc.servlet.ReviewRateServlet;
 import ekgp49.dbc.servlet.ReviewUpdateServlet;
 import ekgp49.dbc.servlet.Servlet;
 
@@ -62,17 +64,20 @@ public class ServerApp {
     notifyApplicationInitialized();
     InformationDao infoDao = (InformationDao) context.get("infoDao");
     ReviewDao reviewDao = (ReviewDao) context.get("reviewDao");
+    InfoMenuDao infoMenuDao = (InfoMenuDao) context.get("infoMenuDao");
     System.out.println("앱 서버입니다");
 
-    servletMap.put("/info/add", new InformationAddServlet(infoDao));
-    servletMap.put("/info/delete", new InformationDeleteServlet(infoDao));
+    servletMap.put("/info/add", new InformationAddServlet(infoDao, infoMenuDao));
+    servletMap.put("/info/delete", new InformationDeleteServlet(infoDao, infoMenuDao));
     servletMap.put("/info/list", new InformationListServlet(infoDao));
-    servletMap.put("/info/update", new InformationUpdateServlet(infoDao));
+    servletMap.put("/info/update", new InformationUpdateServlet(infoDao, infoMenuDao));
     servletMap.put("/info/search", new InformationSearchServlet(infoDao));
+    servletMap.put("/info/detail", new InformationDetailServlet(infoDao, infoMenuDao));
+
     servletMap.put("/review/add", new ReviewAddServlet(reviewDao));
     servletMap.put("/review/delete", new ReviewDeleteServlet(reviewDao));
     servletMap.put("/review/list", new ReviewListServlet(reviewDao));
-    servletMap.put("/review/star", new ReviewSelectServlet(reviewDao));
+    servletMap.put("/review/star", new ReviewRateServlet(reviewDao));
     servletMap.put("/review/update", new ReviewUpdateServlet(reviewDao));
 
     try (ServerSocket serverSocket = new ServerSocket(9999)) {

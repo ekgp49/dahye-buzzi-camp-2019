@@ -1,53 +1,40 @@
 package util;
 
+import java.io.PrintStream;
 import java.sql.Date;
 import java.util.Scanner;
 
 public class Prompt {
-  Scanner input;
-  
-  public Prompt(Scanner input) {
-    this.input = input;
+
+  public static String getInputString(Scanner in, PrintStream out, String label) {
+    out.println(label);
+    out.println("!{}!");
+    out.flush();
+    return in.nextLine();
   }
-  
-  public String inputString(String label) {
-    System.out.print(label);
-    return input.nextLine();
-  }
-  
-  public String inputString(String label, String value) {
-    System.out.print(label);
-    if (input.nextLine().equals(value)) {
-      return value;
+
+  public static String getInputString(Scanner in, PrintStream out, String label,
+      String defaultValue) {
+    String value = getInputString(in, out, label);
+    if (value.equals(defaultValue)) {
+      return defaultValue;
     }
-    return input.nextLine();
+    return value;
   }
-  
-  public int inputInt(String label) {
-    System.out.print(label);
-    return Integer.parseInt(input.nextLine());
+
+  public static int getInputInt(Scanner in, PrintStream out, String label) {
+    return Integer.parseInt(getInputString(in, out, label));
   }
-  
-  public int inputInt(String label, int value) {
-    System.out.print(label);
-    int newValue = Integer.parseInt(input.nextLine());
-    if (newValue == value) {
-      return value;
-    }
-    return newValue;
+
+  public static int getInputInt(Scanner in, PrintStream out, String label, String defaultValue) {
+    return Integer.parseInt(getInputString(in, out, label, defaultValue));
   }
-  
-  public Date inputDate(String label) {
-    System.out.print(label);
-    return Date.valueOf(input.nextLine());
+
+  public static Date getInputDate(Scanner in, PrintStream out, String label) {
+    return Date.valueOf(getInputString(in, out, label));
   }
-  
-  public Date inputDate(String label, Date value) {
-    System.out.print(label);
-    Date newValue = Date.valueOf(input.nextLine());
-    if (newValue.compareTo(value) == 0) {
-      return value;
-    }
-    return newValue;
+
+  public static Date getInputDate(Scanner in, PrintStream out, String label, String defaultValue) {
+    return Date.valueOf(getInputString(in, out, label, defaultValue));
   }
 }

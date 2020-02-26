@@ -8,8 +8,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
-import ekgp49.dbc.dao.InformationDao;
-import ekgp49.dbc.dao.ReviewDao;
 import util.Prompt;
 
 public class ClientApp {
@@ -18,9 +16,6 @@ public class ClientApp {
 
   Deque<String> commandStack;
   Queue<String> commandQueue;
-
-  InformationDao infoDao;
-  ReviewDao reviewDao;
 
   String command;
 
@@ -66,6 +61,7 @@ public class ClientApp {
     int port = 9999;
     String servletPath = null;
     if (!command.startsWith("bitcamp://")) {
+      System.out.println("유효한 커맨드가 아닙니다.");
       return;
     }
     String url = command.substring(10);

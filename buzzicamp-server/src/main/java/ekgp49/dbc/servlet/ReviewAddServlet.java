@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.util.Scanner;
 import ekgp49.dbc.dao.ReviewDao;
 import ekgp49.dbc.domain.Review;
+import util.Prompt;
 
 public class ReviewAddServlet implements Servlet {
   ReviewDao reviewDao;
@@ -15,14 +16,10 @@ public class ReviewAddServlet implements Servlet {
   @Override
   public void service(PrintStream out, Scanner in) throws Exception {
     Review review = new Review();
-    out.println("상호? \n!{}!");
-    review.setCafeName(in.nextLine());
-    out.println("고객명? \n!{}!");
-    review.setCustomer(in.nextLine());
-    out.println("별점? \n!{}!");
-    review.setStarRate(Integer.parseInt(in.nextLine()));
-    out.println("내용?? \n!{}!");
-    review.setContent(in.nextLine());
+    review.setCafeName(Prompt.getInputString(in, out, "상호? "));
+    review.setCustomer(Prompt.getInputString(in, out, "고객명? "));
+    review.setStarRate(Prompt.getInputInt(in, out, "별점? "));
+    review.setContent(Prompt.getInputString(in, out, "내용? "));
 
     if (reviewDao.insert(review) > 0) {
       out.println("새 리뷰를 저장했습니다.");

@@ -9,7 +9,7 @@ public class Information implements Serializable {
   public String toCsvString() {
     return String.format("%d,%s,%s,%s,%s,%s,%s,%s,%s", this.getNo(), this.getCafeName(),
         this.getCafeAddress(), this.getCafeCall(), this.getCafeWebSite(), this.getOpenTime(),
-        this.getCloseTime(), this.getHolliday(), this.getCafeMenu());
+        this.getCloseTime(), this.getHolliday());
   }
 
   public static Information valueOf(String csv) {
@@ -23,7 +23,6 @@ public class Information implements Serializable {
     info.setOpenTime(data[5]);
     info.setCloseTime(data[6]);
     info.setHolliday(data[7]);
-    info.setCafeMenu(data[8]);
     return info;
   }
 
@@ -35,7 +34,6 @@ public class Information implements Serializable {
   private String openTime;
   private String closeTime;
   private String holliday;
-  private String cafeMenu;
 
   @Override
   public int hashCode() {
@@ -43,7 +41,6 @@ public class Information implements Serializable {
     int result = 1;
     result = prime * result + (cafeAddress == null ? 0 : cafeAddress.hashCode());
     result = prime * result + (cafeCall == null ? 0 : cafeCall.hashCode());
-    result = prime * result + (cafeMenu == null ? 0 : cafeMenu.hashCode());
     result = prime * result + (cafeName == null ? 0 : cafeName.hashCode());
     result = prime * result + (cafeWebSite == null ? 0 : cafeWebSite.hashCode());
     result = prime * result + (closeTime == null ? 0 : closeTime.hashCode());
@@ -71,11 +68,6 @@ public class Information implements Serializable {
       if (other.cafeCall != null)
         return false;
     } else if (!cafeCall.equals(other.cafeCall))
-      return false;
-    if (cafeMenu == null) {
-      if (other.cafeMenu != null)
-        return false;
-    } else if (!cafeMenu.equals(other.cafeMenu))
       return false;
     if (cafeName == null) {
       if (other.cafeName != null)
@@ -170,13 +162,4 @@ public class Information implements Serializable {
   public void setHolliday(String holliday) {
     this.holliday = holliday;
   }
-
-  public String getCafeMenu() {
-    return cafeMenu;
-  }
-
-  public void setCafeMenu(String cafeMenu) {
-    this.cafeMenu = cafeMenu;
-  }
-
 }

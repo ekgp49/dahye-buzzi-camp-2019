@@ -19,12 +19,19 @@ public class InformationDaoImpl implements InformationDao {
   @Override
   public int insert(Information info) throws Exception {
     Statement stmt = con.createStatement();
-    return stmt
-        .executeUpdate("insert into information(name, addr, tel, web, op_t, cl_t, hol_day, menu)"
-            + " values('" + info.getCafeName() + "', '" + info.getCafeAddress() + "', '"
-            + info.getCafeCall() + "', '" + info.getCafeWebSite() + "', '" + info.getOpenTime()
-            + "', '" + info.getCloseTime() + "', '" + info.getHolliday() + "', '"
-            + info.getCafeMenu() + "')");
+    int result = stmt.executeUpdate(
+        "insert into information(name, addr, tel, web, op_t, cl_t, hol_day)" + " values('"
+            + info.getCafeName() + "', '" + info.getCafeAddress() + "', '" + info.getCafeCall()
+            + "', '" + info.getCafeWebSite() + "', '" + info.getOpenTime() + "', '"
+            + info.getCloseTime() + "', '" + info.getHolliday() + "')",
+        Statement.RETURN_GENERATED_KEYS);
+
+    try (ResultSet generatedKeySet = stmt.getGeneratedKeys()) {
+      generatedKeySet.next(); // 값 가져오기
+      info.setNo(generatedKeySet.getInt(1)); // 값 꺼내기
+    }
+
+    return result;
   }
 
   @Override
@@ -39,8 +46,8 @@ public class InformationDaoImpl implements InformationDao {
     return stmt.executeUpdate("update information set name ='" + info.getCafeName() + "',"
         + " addr = '" + info.getCafeAddress() + "', tel = '" + info.getCafeCall() + "',"
         + " web = '" + info.getCafeWebSite() + "', op_t = '" + info.getOpenTime() + "',"
-        + " cl_t = '" + info.getCloseTime() + "', hol_day = '" + info.getHolliday() + "',"
-        + " menu = '" + info.getCafeMenu() + "' where information_id=" + info.getNo());
+        + " cl_t = '" + info.getCloseTime() + "', hol_day = '" + info.getHolliday() + "'"
+        + " where information_id=" + info.getNo());
   }
 
   @Override
@@ -51,7 +58,6 @@ public class InformationDaoImpl implements InformationDao {
       Information info = new Information();
       info.setCafeAddress(rs.getString("addr"));
       info.setCafeCall(rs.getString("tel"));
-      info.setCafeMenu(rs.getString("menu"));
       info.setCafeName(rs.getString("name"));
       info.setCafeWebSite(rs.getString("web"));
       info.setCloseTime(rs.getString("cl_t"));
@@ -73,7 +79,6 @@ public class InformationDaoImpl implements InformationDao {
         Information info = new Information();
         info.setCafeAddress(rs.getString("addr"));
         info.setCafeCall(rs.getString("tel"));
-        info.setCafeMenu(rs.getString("menu"));
         info.setCafeName(rs.getString("name"));
         info.setCafeWebSite(rs.getString("web"));
         info.setCloseTime(rs.getString("cl_t"));
@@ -88,9 +93,11 @@ public class InformationDaoImpl implements InformationDao {
 
   @Override
   public List<Information> search(String keyword) throws Exception {
-    try (PreparedStatement stmt =
-        con.prepareStatement("select * from information where name like concat ('%', ?, '%')"
-            + " or addr like concat ('%', ?, '%') or menu like concat ('%', ?, '%')")) {
+    try (PreparedStatement stmt = con.prepareStatement(
+        "select i.information_id, i.name, i.addr, i.tel, i.web, i.op_t, i.cl_t, i.hol_day"
+            + " from information i, info_menu m"
+            + " where i.name like concat ('%', ?, '%') or i.addr like concat ('%', ?, '%')"
+            + " or m.menu_name like concat ('%', ?, '%')")) {
 
       stmt.setString(1, keyword);
       stmt.setString(2, keyword);
@@ -102,7 +109,6 @@ public class InformationDaoImpl implements InformationDao {
         Information info = new Information();
         info.setCafeAddress(rs.getString("addr"));
         info.setCafeCall(rs.getString("tel"));
-        info.setCafeMenu(rs.getString("menu"));
         info.setCafeName(rs.getString("name"));
         info.setCafeWebSite(rs.getString("web"));
         info.setCloseTime(rs.getString("cl_t"));

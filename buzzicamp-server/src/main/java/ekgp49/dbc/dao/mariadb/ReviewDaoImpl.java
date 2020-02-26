@@ -18,9 +18,9 @@ public class ReviewDaoImpl implements ReviewDao {
   @Override
   public int insert(Review review) throws Exception {
     Statement stmt = con.createStatement();
-    return stmt.executeUpdate("insert into review(name, customer, rate, conts, vw_cnt, time_fr_td)"
-        + " values('" + review.getCafeName() + "', '" + review.getCustomer() + "', "
-        + review.getStarRate() + ", '" + review.getContent() + "', " + review.getViewCount() + ")");
+    return stmt.executeUpdate("insert into review(name, customer, rate, conts)" + " values('"
+        + review.getCafeName() + "', '" + review.getCustomer() + "', " + review.getStarRate()
+        + ", '" + review.getContent() + "')");
   }
 
   @Override
