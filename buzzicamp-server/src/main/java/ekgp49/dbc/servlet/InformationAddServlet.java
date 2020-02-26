@@ -2,7 +2,6 @@ package ekgp49.dbc.servlet;
 
 import java.io.PrintStream;
 import java.util.Scanner;
-import ekgp49.dbc.DataLoaderListener;
 import ekgp49.dbc.dao.InfoMenuDao;
 import ekgp49.dbc.dao.InformationDao;
 import ekgp49.dbc.domain.InfoMenu;
@@ -29,7 +28,6 @@ public class InformationAddServlet implements Servlet {
     info.setCloseTime(Prompt.getInputString(in, out, "클로즈시간? "));
     info.setHolliday(Prompt.getInputString(in, out, "휴일? "));
 
-    DataLoaderListener.con.setAutoCommit(false);
     try {
       if (infoDao.insert(info) > 0) {
         while (true) {
@@ -42,16 +40,13 @@ public class InformationAddServlet implements Servlet {
           menu.setInformationNo(info.getNo());
           infoMenuDao.insert(menu);
         }
-        DataLoaderListener.con.commit();
         out.println("새 정보를 저장하였습니다.");
       } else {
         throw new Exception("새 정보 저장 실패");
       }
     } catch (Exception e) {
       out.println(e.getMessage());
-      DataLoaderListener.con.rollback();
     } finally {
-      DataLoaderListener.con.setAutoCommit(true);
     }
   }
 }

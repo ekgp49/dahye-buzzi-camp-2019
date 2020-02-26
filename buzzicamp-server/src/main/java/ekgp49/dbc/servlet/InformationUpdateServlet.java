@@ -2,7 +2,6 @@ package ekgp49.dbc.servlet;
 
 import java.io.PrintStream;
 import java.util.Scanner;
-import ekgp49.dbc.DataLoaderListener;
 import ekgp49.dbc.dao.InfoMenuDao;
 import ekgp49.dbc.dao.InformationDao;
 import ekgp49.dbc.domain.InfoMenu;
@@ -30,7 +29,6 @@ public class InformationUpdateServlet implements Servlet {
         + "\n1 : 상호, 2: 주소, 3: 연락처, 4: 웹사이트, 5: 오픈시간\n"
         + "6 : 종료시간, 7: 정기 휴일, 8: 메뉴, 9: 전체 \n입력 >>");
 
-    DataLoaderListener.con.setAutoCommit(false);
     try {
       switch (command) {
         case 1:
@@ -74,16 +72,13 @@ public class InformationUpdateServlet implements Servlet {
       }
 
       if (infoDao.update(info) > 0) {
-        DataLoaderListener.con.commit();
         out.println("정보를 수정하였습니다.");
       } else {
         throw new Exception("정보 수정 실패");
       }
     } catch (Exception e) {
       out.println(e.getMessage());
-      DataLoaderListener.con.rollback();
     } finally {
-      DataLoaderListener.con.setAutoCommit(true);
     }
 
   }
