@@ -1,7 +1,6 @@
 package ekgp49.dbc.dao.mariadb;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -9,22 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 import ekgp49.dbc.dao.InformationDao;
 import ekgp49.dbc.domain.Information;
+import util.ConnectionFactory;
 
 public class InformationDaoImpl implements InformationDao {
-  String url;
-  String user;
-  String password;
+  ConnectionFactory conFactory;
 
-  public InformationDaoImpl(String url, String user, String password) throws Exception {
-    this.url = url;
-    this.user = user;
-    this.password = password;
+  public InformationDaoImpl(ConnectionFactory conFactory) throws Exception {
+    this.conFactory = conFactory;
   }
 
   @Override
   public int insert(Information info) throws Exception {
-    try (Connection con = DriverManager.getConnection(url, user, password);
-        Statement stmt = con.createStatement()) {
+    try (Connection con = conFactory.getConnection(); Statement stmt = con.createStatement()) {
       int result = stmt.executeUpdate(
           "insert into information(name, addr, tel, web, op_t, cl_t, hol_day)" + " values('"
               + info.getCafeName() + "', '" + info.getCafeAddress() + "', '" + info.getCafeCall()
@@ -43,16 +38,14 @@ public class InformationDaoImpl implements InformationDao {
 
   @Override
   public int delete(int no) throws Exception {
-    try (Connection con = DriverManager.getConnection(url, user, password);
-        Statement stmt = con.createStatement();) {
+    try (Connection con = conFactory.getConnection(); Statement stmt = con.createStatement();) {
       return stmt.executeUpdate("delete from information where information_id=" + no);
     }
   }
 
   @Override
   public int update(Information info) throws Exception {
-    try (Connection con = DriverManager.getConnection(url, user, password);
-        Statement stmt = con.createStatement()) {
+    try (Connection con = conFactory.getConnection(); Statement stmt = con.createStatement()) {
       return stmt.executeUpdate("update information set name ='" + info.getCafeName() + "',"
           + " addr = '" + info.getCafeAddress() + "', tel = '" + info.getCafeCall() + "',"
           + " web = '" + info.getCafeWebSite() + "', op_t = '" + info.getOpenTime() + "',"
@@ -63,7 +56,7 @@ public class InformationDaoImpl implements InformationDao {
 
   @Override
   public Information findByNo(int no) throws Exception {
-    try (Connection con = DriverManager.getConnection(url, user, password);
+    try (Connection con = conFactory.getConnection();
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery("select * from information where information_id=" + no)) {
       if (rs.next()) {
@@ -85,7 +78,7 @@ public class InformationDaoImpl implements InformationDao {
 
   @Override
   public List<Information> findAll() throws Exception {
-    try (Connection con = DriverManager.getConnection(url, user, password);
+    try (Connection con = conFactory.getConnection();
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery("select * from information")) {
       ArrayList<Information> list = new ArrayList<>();
@@ -107,7 +100,7 @@ public class InformationDaoImpl implements InformationDao {
 
   @Override
   public List<Information> search(String keyword) throws Exception {
-    try (Connection con = DriverManager.getConnection(url, user, password);
+    try (Connection con = conFactory.getConnection();
         PreparedStatement stmt = con.prepareStatement(
             "select i.information_id, i.name, i.addr, i.tel, i.web, i.op_t, i.cl_t, i.hol_day"
                 + " from information i, info_menu m"

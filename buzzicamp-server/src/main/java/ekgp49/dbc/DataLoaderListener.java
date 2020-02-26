@@ -5,6 +5,7 @@ import ekgp49.dbc.context.ApplicationContextListener;
 import ekgp49.dbc.dao.mariadb.InfoMenuDaoImpl;
 import ekgp49.dbc.dao.mariadb.InformationDaoImpl;
 import ekgp49.dbc.dao.mariadb.ReviewDaoImpl;
+import util.ConnectionFactory;
 
 public class DataLoaderListener implements ApplicationContextListener {
 
@@ -13,11 +14,12 @@ public class DataLoaderListener implements ApplicationContextListener {
     String url = "jdbc:mariadb://localhost:3306/myproject";
     String user = "buzzi";
     String password = "1111";
+    ConnectionFactory conFactory = new ConnectionFactory(url, user, password);
 
     try {
-      context.put("infoDao", new InformationDaoImpl(url, user, password));
-      context.put("reviewDao", new ReviewDaoImpl(url, user, password));
-      context.put("infoMenuDao", new InfoMenuDaoImpl(url, user, password));
+      context.put("infoDao", new InformationDaoImpl(conFactory));
+      context.put("reviewDao", new ReviewDaoImpl(conFactory));
+      context.put("infoMenuDao", new InfoMenuDaoImpl(conFactory));
     } catch (Exception e) {
     }
   }
