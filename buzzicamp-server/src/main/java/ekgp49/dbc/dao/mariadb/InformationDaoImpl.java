@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import ekgp49.dbc.dao.InformationDao;
 import ekgp49.dbc.domain.Information;
-import util.ConnectionFactory;
+import ekgp49.util.ConnectionFactory;
 
 public class InformationDaoImpl implements InformationDao {
   ConnectionFactory conFactory;

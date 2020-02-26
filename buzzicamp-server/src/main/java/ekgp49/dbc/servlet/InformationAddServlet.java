@@ -1,20 +1,25 @@
 package ekgp49.dbc.servlet;
 
 import java.io.PrintStream;
+import java.sql.Connection;
 import java.util.Scanner;
 import ekgp49.dbc.dao.InfoMenuDao;
 import ekgp49.dbc.dao.InformationDao;
 import ekgp49.dbc.domain.InfoMenu;
 import ekgp49.dbc.domain.Information;
-import util.Prompt;
+import ekgp49.util.ConnectionFactory;
+import ekgp49.util.Prompt;
 
 public class InformationAddServlet implements Servlet {
   InformationDao infoDao;
   InfoMenuDao infoMenuDao;
+  ConnectionFactory conFactory;
 
-  public InformationAddServlet(InformationDao infoDao, InfoMenuDao infoMenuDao) {
+  public InformationAddServlet(InformationDao infoDao, InfoMenuDao infoMenuDao,
+      ConnectionFactory conFactory) {
     this.infoDao = infoDao;
     this.infoMenuDao = infoMenuDao;
+    this.conFactory = conFactory;
   }
 
   @Override
@@ -28,6 +33,8 @@ public class InformationAddServlet implements Servlet {
     info.setCloseTime(Prompt.getInputString(in, out, "클로즈시간? "));
     info.setHolliday(Prompt.getInputString(in, out, "휴일? "));
 
+    Connection con = conFactory.getConnection();
+    con.setAutoCommit(false);
     try {
       if (infoDao.insert(info) > 0) {
         while (true) {
@@ -40,13 +47,16 @@ public class InformationAddServlet implements Servlet {
           menu.setInformationNo(info.getNo());
           infoMenuDao.insert(menu);
         }
+        con.commit();
         out.println("새 정보를 저장하였습니다.");
       } else {
         throw new Exception("새 정보 저장 실패");
       }
     } catch (Exception e) {
+      con.rollback();
       out.println(e.getMessage());
     } finally {
+      con.setAutoCommit(true);
     }
   }
 }

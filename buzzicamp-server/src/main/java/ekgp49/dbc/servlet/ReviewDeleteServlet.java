@@ -3,7 +3,7 @@ package ekgp49.dbc.servlet;
 import java.io.PrintStream;
 import java.util.Scanner;
 import ekgp49.dbc.dao.ReviewDao;
-import util.Prompt;
+import ekgp49.util.Prompt;
 
 public class ReviewDeleteServlet implements Servlet {
   ReviewDao reviewDao;

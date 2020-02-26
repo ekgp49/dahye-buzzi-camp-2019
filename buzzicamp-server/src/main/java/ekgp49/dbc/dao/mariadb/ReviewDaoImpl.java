@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import ekgp49.dbc.dao.ReviewDao;
 import ekgp49.dbc.domain.Review;
-import util.ConnectionFactory;
+import ekgp49.util.ConnectionFactory;
 
 public class ReviewDaoImpl implements ReviewDao {
   ConnectionFactory conFactory;

@@ -5,7 +5,7 @@ import ekgp49.dbc.context.ApplicationContextListener;
 import ekgp49.dbc.dao.mariadb.InfoMenuDaoImpl;
 import ekgp49.dbc.dao.mariadb.InformationDaoImpl;
 import ekgp49.dbc.dao.mariadb.ReviewDaoImpl;
-import util.ConnectionFactory;
+import ekgp49.util.ConnectionFactory;
 
 public class DataLoaderListener implements ApplicationContextListener {
 
@@ -20,6 +20,7 @@ public class DataLoaderListener implements ApplicationContextListener {
       context.put("infoDao", new InformationDaoImpl(conFactory));
       context.put("reviewDao", new ReviewDaoImpl(conFactory));
       context.put("infoMenuDao", new InfoMenuDaoImpl(conFactory));
+      context.put("conFactory", conFactory);
     } catch (Exception e) {
     }
   }

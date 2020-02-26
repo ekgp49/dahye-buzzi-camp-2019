@@ -4,7 +4,7 @@ import java.io.PrintStream;
 import java.util.Scanner;
 import ekgp49.dbc.dao.ReviewDao;
 import ekgp49.dbc.domain.Review;
-import util.Prompt;
+import ekgp49.util.Prompt;
 
 public class ReviewUpdateServlet implements Servlet {
   ReviewDao reviewDao;
@@ -25,8 +25,8 @@ public class ReviewUpdateServlet implements Servlet {
     review.setNo(old.getNo());
     review.setStarRate(Prompt.getInputInt(in, out, String.format("별점(%d)? ", old.getStarRate()),
         String.valueOf(old.getStarRate())));
-    review.setContent(Prompt.getInputString(in, out,
-        String.format("내용(%s)? ", old.getContent(), old.getContent())));
+    review.setContent(Prompt.getInputString(in, out, String.format("내용(%s)? ", old.getContent()),
+        old.getContent()));
 
     if (reviewDao.update(review) > 0) {
       out.println("리뷰를 변경했습니다.");

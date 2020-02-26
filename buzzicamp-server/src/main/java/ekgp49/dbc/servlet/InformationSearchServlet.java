@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 import ekgp49.dbc.dao.InformationDao;
 import ekgp49.dbc.domain.Information;
-import util.Prompt;
+import ekgp49.util.Prompt;
 
 public class InformationSearchServlet implements Servlet {
   InformationDao infoDao;

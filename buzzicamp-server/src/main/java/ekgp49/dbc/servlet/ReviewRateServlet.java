@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 import ekgp49.dbc.dao.ReviewDao;
 import ekgp49.dbc.domain.Review;
-import util.Prompt;
+import ekgp49.util.Prompt;
 
 public class ReviewRateServlet implements Servlet {
   ReviewDao reviewDao;

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import ekgp49.dbc.dao.InfoMenuDao;
 import ekgp49.dbc.domain.InfoMenu;
-import util.ConnectionFactory;
+import ekgp49.util.ConnectionFactory;
 
 public class InfoMenuDaoImpl implements InfoMenuDao {
   ConnectionFactory conFactory;
@@ -35,7 +35,8 @@ public class InfoMenuDaoImpl implements InfoMenuDao {
   public List<InfoMenu> findAll(int infoNo) throws Exception {
     try (Connection con = conFactory.getConnection();
         Statement stmt = con.createStatement();
-        ResultSet rs = stmt.executeQuery("select * from info_menu")) {
+        ResultSet rs =
+            stmt.executeQuery("select * from info_menu where information_id = " + infoNo)) {
       ArrayList<InfoMenu> list = new ArrayList<>();
       while (rs.next()) {
         InfoMenu menu = new InfoMenu();

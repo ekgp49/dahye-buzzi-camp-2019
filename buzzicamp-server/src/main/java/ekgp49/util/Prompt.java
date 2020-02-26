@@ -1,4 +1,4 @@
-package util;
+package ekgp49.util;
 
 import java.io.PrintStream;
 import java.sql.Date;
@@ -16,7 +16,7 @@ public class Prompt {
   public static String getInputString(Scanner in, PrintStream out, String label,
       String defaultValue) {
     String value = getInputString(in, out, label);
-    if (value.equals(defaultValue)) {
+    if (value.length() == 0) {
       return defaultValue;
     }
     return value;

@@ -27,6 +27,8 @@ import ekgp49.dbc.servlet.ReviewListServlet;
 import ekgp49.dbc.servlet.ReviewRateServlet;
 import ekgp49.dbc.servlet.ReviewUpdateServlet;
 import ekgp49.dbc.servlet.Servlet;
+import ekgp49.sql.ConnectionProxy;
+import ekgp49.util.ConnectionFactory;
 
 public class ServerApp {
 
@@ -65,12 +67,14 @@ public class ServerApp {
     InformationDao infoDao = (InformationDao) context.get("infoDao");
     ReviewDao reviewDao = (ReviewDao) context.get("reviewDao");
     InfoMenuDao infoMenuDao = (InfoMenuDao) context.get("infoMenuDao");
+    ConnectionFactory conFactory = (ConnectionFactory) context.get("conFactory");
+
     System.out.println("앱 서버입니다");
 
-    servletMap.put("/info/add", new InformationAddServlet(infoDao, infoMenuDao));
-    servletMap.put("/info/delete", new InformationDeleteServlet(infoDao, infoMenuDao));
+    servletMap.put("/info/add", new InformationAddServlet(infoDao, infoMenuDao, conFactory));
+    servletMap.put("/info/delete", new InformationDeleteServlet(infoDao, infoMenuDao, conFactory));
     servletMap.put("/info/list", new InformationListServlet(infoDao));
-    servletMap.put("/info/update", new InformationUpdateServlet(infoDao, infoMenuDao));
+    servletMap.put("/info/update", new InformationUpdateServlet(infoDao, infoMenuDao, conFactory));
     servletMap.put("/info/search", new InformationSearchServlet(infoDao));
     servletMap.put("/info/detail", new InformationDetailServlet(infoDao, infoMenuDao));
 
@@ -86,6 +90,12 @@ public class ServerApp {
         Socket socket = serverSocket.accept(); // 여기에 try{} 걸면 소켓 닫혀서 오류남
         executorService.submit(() -> {
           processRequest(socket);
+          ConnectionProxy con = (ConnectionProxy) conFactory.removeConnection();
+          try {
+            con.realClose();
+          } catch (Exception e) {
+            //
+          }
           System.out.println("-------------연결 종료---------------");
         });
 
