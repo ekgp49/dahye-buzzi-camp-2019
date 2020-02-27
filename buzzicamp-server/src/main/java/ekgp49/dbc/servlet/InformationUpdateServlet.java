@@ -1,25 +1,27 @@
 package ekgp49.dbc.servlet;
 
 import java.io.PrintStream;
-import java.sql.Connection;
 import java.util.Scanner;
 import ekgp49.dbc.dao.InfoMenuDao;
 import ekgp49.dbc.dao.InformationDao;
 import ekgp49.dbc.domain.InfoMenu;
 import ekgp49.dbc.domain.Information;
 import ekgp49.util.ConnectionFactory;
+import ekgp49.util.PlatformTransactionManager;
 import ekgp49.util.Prompt;
 
 public class InformationUpdateServlet implements Servlet {
   InformationDao infoDao;
   InfoMenuDao infoMenuDao;
   ConnectionFactory conFactory;
+  PlatformTransactionManager txManager;
 
   public InformationUpdateServlet(InformationDao infoDao, InfoMenuDao infoMenuDao,
       ConnectionFactory conFactory) {
     this.infoDao = infoDao;
     this.infoMenuDao = infoMenuDao;
     this.conFactory = conFactory;
+    txManager = new PlatformTransactionManager(conFactory);
   }
 
   @Override
@@ -34,8 +36,7 @@ public class InformationUpdateServlet implements Servlet {
         + "\n1 : 상호, 2: 주소, 3: 연락처, 4: 웹사이트, 5: 오픈시간\n"
         + "6 : 종료시간, 7: 정기 휴일, 8: 메뉴, 9: 전체 \n입력 >>");
 
-    Connection con = conFactory.getConnection();
-    con.setAutoCommit(false);
+    txManager.beginTransaction();
     try {
       switch (command) {
         case 1:
@@ -79,16 +80,14 @@ public class InformationUpdateServlet implements Servlet {
       }
 
       if (infoDao.update(info) > 0) {
-        con.commit();
+        txManager.commit();
         out.println("정보를 수정하였습니다.");
       } else {
         throw new Exception("정보 수정 실패");
       }
     } catch (Exception e) {
       out.println(e.getMessage());
-      con.rollback();
-    } finally {
-      con.setAutoCommit(true);
+      txManager.rollback();
     }
 
   }
