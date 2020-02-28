@@ -8,18 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 import ekgp49.dbc.dao.InformationDao;
 import ekgp49.dbc.domain.Information;
-import ekgp49.util.ConnectionFactory;
+import ekgp49.sql.DataSource;
 
 public class InformationDaoImpl implements InformationDao {
-  ConnectionFactory conFactory;
+  DataSource dataSource;
 
-  public InformationDaoImpl(ConnectionFactory conFactory) throws Exception {
-    this.conFactory = conFactory;
+  public InformationDaoImpl(DataSource dataSource) throws Exception {
+    this.dataSource = dataSource;
   }
 
   @Override
   public int insert(Information info) throws Exception {
-    try (Connection con = conFactory.getConnection(); Statement stmt = con.createStatement()) {
+    try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
       int result = stmt.executeUpdate(
           "insert into information(name, addr, tel, web, op_t, cl_t, hol_day)" + " values('"
               + info.getCafeName() + "', '" + info.getCafeAddress() + "', '" + info.getCafeCall()
@@ -38,14 +38,14 @@ public class InformationDaoImpl implements InformationDao {
 
   @Override
   public int delete(int no) throws Exception {
-    try (Connection con = conFactory.getConnection(); Statement stmt = con.createStatement();) {
+    try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement();) {
       return stmt.executeUpdate("delete from information where information_id=" + no);
     }
   }
 
   @Override
   public int update(Information info) throws Exception {
-    try (Connection con = conFactory.getConnection(); Statement stmt = con.createStatement()) {
+    try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
       return stmt.executeUpdate("update information set name ='" + info.getCafeName() + "',"
           + " addr = '" + info.getCafeAddress() + "', tel = '" + info.getCafeCall() + "',"
           + " web = '" + info.getCafeWebSite() + "', op_t = '" + info.getOpenTime() + "',"
@@ -56,7 +56,7 @@ public class InformationDaoImpl implements InformationDao {
 
   @Override
   public Information findByNo(int no) throws Exception {
-    try (Connection con = conFactory.getConnection();
+    try (Connection con = dataSource.getConnection();
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery("select * from information where information_id=" + no)) {
       if (rs.next()) {
@@ -78,7 +78,7 @@ public class InformationDaoImpl implements InformationDao {
 
   @Override
   public List<Information> findAll() throws Exception {
-    try (Connection con = conFactory.getConnection();
+    try (Connection con = dataSource.getConnection();
         Statement stmt = con.createStatement();
         ResultSet rs = stmt.executeQuery("select * from information")) {
       ArrayList<Information> list = new ArrayList<>();
@@ -100,7 +100,7 @@ public class InformationDaoImpl implements InformationDao {
 
   @Override
   public List<Information> search(String keyword) throws Exception {
-    try (Connection con = conFactory.getConnection();
+    try (Connection con = dataSource.getConnection();
         PreparedStatement stmt = con.prepareStatement(
             "select i.information_id, i.name, i.addr, i.tel, i.web, i.op_t, i.cl_t, i.hol_day"
                 + " from information i, info_menu m"

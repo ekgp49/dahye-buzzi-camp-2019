@@ -5,22 +5,23 @@ import ekgp49.dbc.context.ApplicationContextListener;
 import ekgp49.dbc.dao.mariadb.InfoMenuDaoImpl;
 import ekgp49.dbc.dao.mariadb.InformationDaoImpl;
 import ekgp49.dbc.dao.mariadb.ReviewDaoImpl;
-import ekgp49.util.ConnectionFactory;
+import ekgp49.sql.DataSource;
 
 public class DataLoaderListener implements ApplicationContextListener {
+  DataSource dataSource;
 
   @Override
   public void contextInitialized(Map<String, Object> context) {
     String url = "jdbc:mariadb://localhost:3306/myproject";
     String user = "buzzi";
     String password = "1111";
-    ConnectionFactory conFactory = new ConnectionFactory(url, user, password);
+    dataSource = new DataSource(url, user, password);
 
     try {
-      context.put("infoDao", new InformationDaoImpl(conFactory));
-      context.put("reviewDao", new ReviewDaoImpl(conFactory));
-      context.put("infoMenuDao", new InfoMenuDaoImpl(conFactory));
-      context.put("conFactory", conFactory);
+      context.put("infoDao", new InformationDaoImpl(dataSource));
+      context.put("reviewDao", new ReviewDaoImpl(dataSource));
+      context.put("infoMenuDao", new InfoMenuDaoImpl(dataSource));
+      context.put("dataSource", dataSource);
     } catch (Exception e) {
     }
   }
@@ -28,5 +29,6 @@ public class DataLoaderListener implements ApplicationContextListener {
   @Override
   public void contextDestroyed(Map<String, Object> context) {
     System.out.println("데이터를 저장합니다.");
+    dataSource.clean();
   }
 }

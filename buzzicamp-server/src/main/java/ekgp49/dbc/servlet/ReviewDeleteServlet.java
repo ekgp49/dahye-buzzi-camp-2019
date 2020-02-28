@@ -16,11 +16,15 @@ public class ReviewDeleteServlet implements Servlet {
   public void service(PrintStream out, Scanner in) throws Exception {
     int no = Prompt.getInputInt(in, out, "리뷰 번호? ");
     if (reviewDao.findByNo(no) == null) {
-      out.println("해당번호의 리뷰정보가 없습니다.");
-    } else {
+      throw new Exception("해당번호의 리뷰정보가 없습니다.");
+    }
+
+    try {
       reviewDao.delete(no);
       out.println("리뷰를 삭제했습니다.");
       out.flush();
+    } catch (Exception e) {
+      throw e;
     }
   }
 }

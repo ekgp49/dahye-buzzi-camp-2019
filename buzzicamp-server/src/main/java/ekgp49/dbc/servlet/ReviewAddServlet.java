@@ -24,7 +24,7 @@ public class ReviewAddServlet implements Servlet {
     if (reviewDao.insert(review) > 0) {
       out.println("새 리뷰를 저장했습니다.");
     } else {
-      out.println("새 리뷰 저장 실패");
+      throw new Exception("새 리뷰 저장 실패");
     }
   }
 }

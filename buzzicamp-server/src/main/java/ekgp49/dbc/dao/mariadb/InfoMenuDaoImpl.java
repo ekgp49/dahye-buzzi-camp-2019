@@ -7,18 +7,18 @@ import java.util.ArrayList;
 import java.util.List;
 import ekgp49.dbc.dao.InfoMenuDao;
 import ekgp49.dbc.domain.InfoMenu;
-import ekgp49.util.ConnectionFactory;
+import ekgp49.sql.DataSource;
 
 public class InfoMenuDaoImpl implements InfoMenuDao {
-  ConnectionFactory conFactory;
+  DataSource dataSource;
 
-  public InfoMenuDaoImpl(ConnectionFactory conFactory) throws Exception {
-    this.conFactory = conFactory;
+  public InfoMenuDaoImpl(DataSource dataSource) throws Exception {
+    this.dataSource = dataSource;
   }
 
   @Override
   public int insert(InfoMenu menu) throws Exception {
-    try (Connection con = conFactory.getConnection(); Statement stmt = con.createStatement()) {
+    try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
       return stmt.executeUpdate("insert into info_menu(menu_name, information_id) values('"
           + menu.getName() + "', '" + menu.getInformationNo() + "')");
     }
@@ -26,14 +26,14 @@ public class InfoMenuDaoImpl implements InfoMenuDao {
 
   @Override
   public int deleteAll(int infoNo) throws Exception {
-    try (Connection con = conFactory.getConnection(); Statement stmt = con.createStatement()) {
+    try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
       return stmt.executeUpdate("delete from info_menu where information_id=" + infoNo);
     }
   }
 
   @Override
   public List<InfoMenu> findAll(int infoNo) throws Exception {
-    try (Connection con = conFactory.getConnection();
+    try (Connection con = dataSource.getConnection();
         Statement stmt = con.createStatement();
         ResultSet rs =
             stmt.executeQuery("select * from info_menu where information_id = " + infoNo)) {

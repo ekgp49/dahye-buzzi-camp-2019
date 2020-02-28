@@ -31,7 +31,7 @@ public class ReviewUpdateServlet implements Servlet {
     if (reviewDao.update(review) > 0) {
       out.println("리뷰를 변경했습니다.");
     } else {
-      out.println("리뷰 변경 실패");
+      throw new Exception("리뷰 변경 실패");
     }
   }
 }

@@ -6,38 +6,40 @@ import ekgp49.dbc.dao.InfoMenuDao;
 import ekgp49.dbc.dao.InformationDao;
 import ekgp49.dbc.domain.InfoMenu;
 import ekgp49.dbc.domain.Information;
-import ekgp49.util.ConnectionFactory;
-import ekgp49.util.PlatformTransactionManager;
+import ekgp49.sql.DataSource;
+import ekgp49.sql.PlatformTransactionManager;
+import ekgp49.sql.TransactionTemplate;
 import ekgp49.util.Prompt;
 
 public class InformationUpdateServlet implements Servlet {
   InformationDao infoDao;
   InfoMenuDao infoMenuDao;
-  ConnectionFactory conFactory;
+  DataSource conFactory;
   PlatformTransactionManager txManager;
+  TransactionTemplate transactionTemplate;
 
   public InformationUpdateServlet(InformationDao infoDao, InfoMenuDao infoMenuDao,
-      ConnectionFactory conFactory) {
+      DataSource conFactory) {
     this.infoDao = infoDao;
     this.infoMenuDao = infoMenuDao;
     this.conFactory = conFactory;
     txManager = new PlatformTransactionManager(conFactory);
+    transactionTemplate = new TransactionTemplate(txManager);
   }
 
   @Override
   public void service(PrintStream out, Scanner in) throws Exception {
     int no = Prompt.getInputInt(in, out, "번호? ");
-    Information info = infoDao.findByNo(no);
-    if (info == null) {
-      out.println("해당번호의 회원정보이 없습니다.");
-      return;
-    }
-    int command = Prompt.getInputInt(in, out, "수정할 영역을 입력하세요."//
-        + "\n1 : 상호, 2: 주소, 3: 연락처, 4: 웹사이트, 5: 오픈시간\n"
-        + "6 : 종료시간, 7: 정기 휴일, 8: 메뉴, 9: 전체 \n입력 >>");
 
-    txManager.beginTransaction();
-    try {
+    transactionTemplate.execute(() -> {
+      Information info = infoDao.findByNo(no);
+      if (info == null) {
+        throw new Exception("해당번호의 회원정보이 없습니다.");
+      }
+      int command = Prompt.getInputInt(in, out, "수정할 영역을 입력하세요."//
+          + "\n1 : 상호, 2: 주소, 3: 연락처, 4: 웹사이트, 5: 오픈시간\n"
+          + "6 : 종료시간, 7: 정기 휴일, 8: 메뉴, 9: 전체 \n입력 >>");
+
       switch (command) {
         case 1:
           info.setCafeName(Prompt.getInputString(in, out, "상호: "));
@@ -80,29 +82,29 @@ public class InformationUpdateServlet implements Servlet {
       }
 
       if (infoDao.update(info) > 0) {
-        txManager.commit();
         out.println("정보를 수정하였습니다.");
       } else {
         throw new Exception("정보 수정 실패");
       }
-    } catch (Exception e) {
-      out.println(e.getMessage());
-      txManager.rollback();
-    }
+      return null;
+    });
 
   }
 
   private void changeMenu(PrintStream out, Scanner in, int no) throws Exception {
-    infoMenuDao.deleteAll(no);
-    while (true) {
-      InfoMenu menu = new InfoMenu();
-      String name = Prompt.getInputString(in, out, "> ");
-      if (name.length() == 0) {
-        break;
+    transactionTemplate.execute(() -> {
+      infoMenuDao.deleteAll(no);
+      while (true) {
+        InfoMenu menu = new InfoMenu();
+        String name = Prompt.getInputString(in, out, "> ");
+        if (name.length() == 0) {
+          break;
+        }
+        menu.setName(name);
+        menu.setInformationNo(no);
+        infoMenuDao.insert(menu);
       }
-      menu.setName(name);
-      menu.setInformationNo(no);
-      infoMenuDao.insert(menu);
-    }
+      return null;
+    });
   }
 }

@@ -1,11 +1,11 @@
-package ekgp49.util;
+package ekgp49.sql;
 
 import java.sql.Connection;
 
 public class PlatformTransactionManager {
-  ConnectionFactory conFactory;
+  DataSource conFactory;
 
-  public PlatformTransactionManager(ConnectionFactory conFactory) {
+  public PlatformTransactionManager(DataSource conFactory) {
     this.conFactory = conFactory;
   }
 
