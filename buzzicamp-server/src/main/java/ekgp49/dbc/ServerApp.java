@@ -31,19 +31,33 @@ import ekgp49.sql.DataSource;
 
 public class ServerApp {
 
+  public static void main(String[] args) {
+    ServerApp app = new ServerApp();
+    app.addListener(new DataLoaderListener());
+    app.service();
+  }
   Set<ApplicationContextListener> listeners = new HashSet<>();
   Map<String, Object> context = new HashMap<>();
   Map<String, Servlet> servletMap = new HashMap<>();
   ExecutorService executorService = Executors.newCachedThreadPool();
+
   boolean serverStop = false;
+
 
   public void addListener(ApplicationContextListener listener) {
     listeners.add(listener);
   }
 
 
-  public void removeListener(ApplicationContextListener listener) {
-    listeners.remove(listener);
+  private void notFount(PrintStream out) throws IOException {
+    out.println("요청한 명령을 처리할 수 없습니다");
+  }
+
+
+  private void notifyApplicationDestroyed() {
+    for (ApplicationContextListener a : listeners) {
+      a.contextDestroyed(context);
+    }
   }
 
 
@@ -54,12 +68,51 @@ public class ServerApp {
   }
 
 
-  private void notifyApplicationDestroyed() {
-    for (ApplicationContextListener a : listeners) {
-      a.contextDestroyed(context);
+  void processRequest(Socket clientSocket) {
+    try (Socket socket = clientSocket;
+        PrintStream out = new PrintStream(socket.getOutputStream());
+        Scanner in = new Scanner(socket.getInputStream())) {
+
+      String request = in.nextLine();
+      System.out.println(request);
+      System.out.println("클라이언트가 보낸 메시지를 수신하였음!");
+
+      if (request.equalsIgnoreCase("/server/stop")) {
+        quit(out);
+      }
+
+      Servlet servlet = servletMap.get(request);
+      if (servlet != null) {
+        try {
+          servlet.service(out, in);
+          out.println("!end!");
+        } catch (Exception e) {
+          out.println("요청처리 중 오류 발생: " + e.getMessage());
+          System.out.println("클라이언트 요청 처리 중 오류 발생");
+          e.printStackTrace();
+        }
+      } else {
+        notFount(out);
+        out.println("!end!");
+      }
+      out.flush();
+      System.out.println("클라이언트에게 응답하였음");
+    } catch (Exception e) {
+      System.out.println("서버 문제 발생");
+      e.printStackTrace();
     }
   }
 
+
+  private void quit(PrintStream out) throws IOException {
+    out.println("OK");
+    out.println("!end!");
+    serverStop = true;
+  }
+
+  public void removeListener(ApplicationContextListener listener) {
+    listeners.remove(listener);
+  }
 
   void service() {
     notifyApplicationInitialized();
@@ -116,58 +169,6 @@ public class ServerApp {
     }
     notifyApplicationDestroyed();
     System.out.println("서버 종료");
-  }
-
-
-  void processRequest(Socket clientSocket) {
-    try (Socket socket = clientSocket;
-        PrintStream out = new PrintStream(socket.getOutputStream());
-        Scanner in = new Scanner(socket.getInputStream())) {
-
-      String request = in.nextLine();
-      System.out.println(request);
-      System.out.println("클라이언트가 보낸 메시지를 수신하였음!");
-
-      if (request.equalsIgnoreCase("/server/stop")) {
-        quit(out);
-      }
-
-      Servlet servlet = servletMap.get(request);
-      if (servlet != null) {
-        try {
-          servlet.service(out, in);
-          out.println("!end!");
-        } catch (Exception e) {
-          out.println("요청처리 중 오류 발생: " + e.getMessage());
-          System.out.println("클라이언트 요청 처리 중 오류 발생");
-          e.printStackTrace();
-        }
-      } else {
-        notFount(out);
-      }
-      out.flush();
-      System.out.println("클라이언트에게 응답하였음");
-    } catch (Exception e) {
-      System.out.println("서버 문제 발생");
-      e.printStackTrace();
-    }
-  }
-
-
-  private void notFount(PrintStream out) throws IOException {
-    out.println("요청한 명령을 처리할 수 없습니다");
-  }
-
-  private void quit(PrintStream out) throws IOException {
-    out.println("OK");
-    out.println("!end!");
-    serverStop = true;
-  }
-
-  public static void main(String[] args) {
-    ServerApp app = new ServerApp();
-    app.addListener(new DataLoaderListener());
-    app.service();
   }
 }
 
