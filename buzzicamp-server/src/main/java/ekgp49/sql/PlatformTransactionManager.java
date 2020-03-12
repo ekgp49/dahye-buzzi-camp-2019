@@ -1,29 +1,28 @@
 package ekgp49.sql;
 
-import java.sql.Connection;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 
 public class PlatformTransactionManager {
-  DataSource conFactory;
+  SqlSessionFactory sqlSessionFactory;
 
-  public PlatformTransactionManager(DataSource conFactory) {
-    this.conFactory = conFactory;
+  public PlatformTransactionManager(SqlSessionFactory sqlSessionFactory) {
+    this.sqlSessionFactory = sqlSessionFactory;
   }
 
   public void beginTransaction() throws Exception {
-    Connection con = conFactory.getConnection();
-    con.setAutoCommit(false);
+    ((SqlSessionFactoryProxy) sqlSessionFactory).closeSession();
+    sqlSessionFactory.openSession(false);
   }
 
   public void commit() throws Exception {
-    Connection con = conFactory.getConnection();
-    con.commit();
-    con.setAutoCommit(true);
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    sqlSession.commit();
   }
 
   public void rollback() throws Exception {
-    Connection con = conFactory.getConnection();
-    con.rollback();
-    con.setAutoCommit(true);
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+    sqlSession.rollback();
   }
 
 }

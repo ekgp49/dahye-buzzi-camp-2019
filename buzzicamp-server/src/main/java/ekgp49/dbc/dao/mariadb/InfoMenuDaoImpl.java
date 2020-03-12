@@ -1,50 +1,39 @@
 package ekgp49.dbc.dao.mariadb;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import ekgp49.dbc.dao.InfoMenuDao;
 import ekgp49.dbc.domain.InfoMenu;
-import ekgp49.sql.DataSource;
+import ekgp49.dbc.domain.Information;
 
 public class InfoMenuDaoImpl implements InfoMenuDao {
-  DataSource dataSource;
+  SqlSessionFactory sqlSessionFactory;
 
-  public InfoMenuDaoImpl(DataSource dataSource) throws Exception {
-    this.dataSource = dataSource;
+  public InfoMenuDaoImpl(SqlSessionFactory sqlSessionFactory) {
+    this.sqlSessionFactory = sqlSessionFactory;
   }
 
   @Override
-  public int insert(InfoMenu menu) throws Exception {
-    try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
-      return stmt.executeUpdate("insert into info_menu(menu_name, information_id) values('"
-          + menu.getName() + "', '" + menu.getInformationNo() + "')");
+  public int insert(Information information) throws Exception {
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      int count = sqlSession.insert("InfoMenuMapper.insertInfoMenu", information);
+      return count;
     }
   }
 
   @Override
   public int deleteAll(int infoNo) throws Exception {
-    try (Connection con = dataSource.getConnection(); Statement stmt = con.createStatement()) {
-      return stmt.executeUpdate("delete from info_menu where information_id=" + infoNo);
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      int count = sqlSession.delete("InfoMenuMapper.deleteInfoMenu", infoNo);
+      return count;
     }
   }
 
   @Override
   public List<InfoMenu> findAll(int infoNo) throws Exception {
-    try (Connection con = dataSource.getConnection();
-        Statement stmt = con.createStatement();
-        ResultSet rs =
-            stmt.executeQuery("select * from info_menu where information_id = " + infoNo)) {
-      ArrayList<InfoMenu> list = new ArrayList<>();
-      while (rs.next()) {
-        InfoMenu menu = new InfoMenu();
-        menu.setInformationNo(rs.getInt("information_id"));
-        menu.setName(rs.getString("menu_name"));
-        list.add(menu);
-      }
-      return list;
+    try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+      return sqlSession.selectList("InfoMenuMapper.selectInfoMenu", infoNo);
     }
   }
 }

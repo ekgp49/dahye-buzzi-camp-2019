@@ -55,7 +55,7 @@ public class ClientApp {
 
   }
 
-  // bitcamp://localhost:9999/info/list
+  // bitcamp://localhost:9999/review/list
   private void processCommand() {
     String host = null;
     int port = 9999;

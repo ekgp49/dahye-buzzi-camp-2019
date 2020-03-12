@@ -1,6 +1,7 @@
 package ekgp49.dbc.dao;
 
 import java.util.List;
+import java.util.Map;
 import ekgp49.dbc.domain.Information;
 
 public interface InformationDao {
@@ -15,5 +16,5 @@ public interface InformationDao {
 
   List<Information> findAll() throws Exception;
 
-  List<Information> search(String keyword) throws Exception;
+  List<Information> search(Map<String, Object> params) throws Exception;
 }

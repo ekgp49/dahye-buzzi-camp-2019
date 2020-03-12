@@ -1,12 +1,13 @@
 package ekgp49.dbc.servlet;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import ekgp49.dbc.dao.InfoMenuDao;
 import ekgp49.dbc.dao.InformationDao;
 import ekgp49.dbc.domain.InfoMenu;
 import ekgp49.dbc.domain.Information;
-import ekgp49.sql.DataSource;
 import ekgp49.sql.PlatformTransactionManager;
 import ekgp49.sql.TransactionTemplate;
 import ekgp49.util.Prompt;
@@ -14,16 +15,14 @@ import ekgp49.util.Prompt;
 public class InformationAddServlet implements Servlet {
   InformationDao infoDao;
   InfoMenuDao infoMenuDao;
-  DataSource conFactory;
   PlatformTransactionManager txManager;
   TransactionTemplate transactionTemplate;
 
   public InformationAddServlet(InformationDao infoDao, InfoMenuDao infoMenuDao,
-      DataSource conFactory) {
+      PlatformTransactionManager txManager) {
     this.infoDao = infoDao;
     this.infoMenuDao = infoMenuDao;
-    this.conFactory = conFactory;
-    txManager = new PlatformTransactionManager(conFactory);
+    this.txManager = txManager;
     transactionTemplate = new TransactionTemplate(txManager);
   }
 
@@ -40,6 +39,8 @@ public class InformationAddServlet implements Servlet {
 
     transactionTemplate.execute(() -> {
       if (infoDao.insert(info) > 0) {
+        List<InfoMenu> menuList = new ArrayList<>();
+
         while (true) {
           InfoMenu menu = new InfoMenu();
           String name = Prompt.getInputString(in, out, "메뉴? ");
@@ -48,8 +49,10 @@ public class InformationAddServlet implements Servlet {
           }
           menu.setName(name);
           menu.setInformationNo(info.getNo());
-          infoMenuDao.insert(menu);
+          menuList.add(menu);
         }
+        info.setMenuList(menuList);
+        infoMenuDao.insert(info);
         out.println("새 정보를 저장하였습니다.");
       } else {
         throw new Exception("새 정보 저장 실패");

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="InformationMapper">
+
+  <resultMap type="Information" id="InformationMap">
+    <id column="information_id" property="no"/>
+    <result column="name" property="cafeName"/>
+    <result column="addr" property="cafeAddress"/>
+    <result column="tel" property="cafeCall"/>
+    <result column="web" property="cafeWebSite"/>
+    <result column="op_t" property="openTime"/>
+    <result column="cl_t" property="closeTime"/>
+    <result column="hol_day" property="holliday"/>
+    
+    <collection property="menuList" ofType="InfoMenu">
+      <id column="menu_id" property="no"/>
+      <result column="menu_name" property="name"/>
+      <result column="information_id" property="informationNo"/>
+    </collection>
+
+  </resultMap>
+  
+  <select id="selectInformation" resultMap="InformationMap" parameterType="int">
+    select
+      information_id,
+      name, 
+      addr, 
+      tel, 
+      web, 
+      op_t, 
+      cl_t, 
+      hol_day
+    from
+      information
+    <where>
+      <if test="no != null">information_id=#{no}</if>
+    </where>
+  </select>
+
+  <insert id="insertInformation" parameterType="Information" 
+     useGeneratedKeys="true" keyColumn="information_id" keyProperty="no">
+    insert
+     into information(
+       name,
+       addr, 
+       tel, 
+       web, 
+       op_t, 
+       cl_t, 
+       hol_day) 
+    values(
+      #{cafeName},
+      #{cafeAddress},
+      #{cafeCall},
+      #{cafeWebSite},
+      #{openTime},
+      #{closeTime},
+      #{holliday}
+      )
+  </insert>
+  
+  <delete id="deleteInformation" parameterType="int">
+    delete 
+     from
+       information
+     where
+       information_id=#{no}
+  </delete>
+  
+  <select id="searchInformation" resultMap="InformationMap" parameterType="map">
+    select
+      i.information_id, 
+      i.name, 
+      i.addr, 
+      i.tel, 
+      i.web, 
+      i.op_t, 
+      i.cl_t, 
+      i.hol_day,
+      m.menu_name
+    from 
+      information i inner join info_menu m
+      on i.information_id = m.information_id
+    <where>
+      i.name like concat('%', #{keyword}, '%')
+      or i.addr like concat('%', #{keyword}, '%')
+      or m.menu_name like concat('%', #{keyword}, '%')
+    </where>
+  </select>
+
+  <update id="updateInformation" parameterType="Information">
+    update
+      information
+    <set>
+      <if test="cafeName != null and cafename !=''">name = #{cafeName},</if>
+      <if test="cafeAddress != null and cafeAddress !=''">addr = #{cafeAddress},</if>
+      <if test="cafeCall != null and cafeCall !=''">tel = #{cafeCall},</if>
+      <if test="cafeWebSite != null and cafeWebSite !=''">web = #{cafeWebSite},</if>
+      <if test="openTime != null and openTime !=''">op_t = #{openTime},</if>
+      <if test="closeTime != null and closeTime !=''">cl_t = #{closeTime},</if>
+     <if test="holliday != null and holliday !=''"> hol_day = #{holliday}</if>
+    </set>
+    where information_id = #{no}
+  </update>
+  
+</mapper>
+
+
+
+
+

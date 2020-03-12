@@ -1,7 +1,6 @@
 package ekgp49.dbc.servlet;
 
 import java.io.PrintStream;
-import java.util.List;
 import java.util.Scanner;
 import ekgp49.dbc.dao.InfoMenuDao;
 import ekgp49.dbc.dao.InformationDao;
@@ -30,11 +29,12 @@ public class InformationDetailServlet implements Servlet {
           info.getCafeAddress(), info.getCafeCall(), info.getCafeWebSite(), info.getOpenTime(),
           info.getCloseTime(), info.getHolliday());
 
-      List<InfoMenu> menu = infoMenuDao.findAll(no);
-      out.println("메뉴: ");
-      for (InfoMenu item : menu) {
-        out.println(item.getName());
+      out.println("[메뉴]");
+      String menu = "";
+      for (InfoMenu infoMenu : info.getMenuList()) {
+        menu += ", " + infoMenu.getName();
       }
+      out.println(menu);
     } catch (Exception e) {
       out.println(e.getMessage());
     }

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="InfoMenuMapper">
+
+  <resultMap type="InfoMenu" id="InfoMenuMap">
+    <id column="menu_id" property="no"/>
+    <result column="menu_name" property="name"/>
+    <result column="information_id" property="informationNo"/>
+  </resultMap>
+
+  <select id="selectInfoMenu" resultMap="InfoMenuMap" parameterType="int">
+    select
+      information_id,
+      menu_name,
+      menu_id
+    from
+      info_menu
+    where 
+      information_id=#{no}
+  </select>
+
+  <insert id="insertInfoMenu" parameterType="Information">
+    insert
+     into info_menu(
+       information_id,
+       menu_name
+     ) 
+     values
+    <foreach collection="menuList" item="menu" separator=",">
+      (#{no}, #{menu.name})
+    </foreach>
+  </insert>
+  
+  <delete id="deleteInfoMenu" parameterType="int">
+    delete 
+     from
+      info_menu
+     where
+      information_id=#{no}
+  </delete>
+  
+</mapper>
+
+
+
+
+

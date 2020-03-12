@@ -1,6 +1,7 @@
 package ekgp49.dbc.domain;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Information implements Serializable {
 
@@ -34,6 +35,15 @@ public class Information implements Serializable {
   private String openTime;
   private String closeTime;
   private String holliday;
+  private List<InfoMenu> menuList;
+
+  public List<InfoMenu> getMenuList() {
+    return menuList;
+  }
+
+  public void setMenuList(List<InfoMenu> menuList) {
+    this.menuList = menuList;
+  }
 
   @Override
   public int hashCode() {

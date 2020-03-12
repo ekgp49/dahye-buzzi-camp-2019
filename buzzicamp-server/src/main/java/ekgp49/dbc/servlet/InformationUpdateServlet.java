@@ -1,12 +1,13 @@
 package ekgp49.dbc.servlet;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import ekgp49.dbc.dao.InfoMenuDao;
 import ekgp49.dbc.dao.InformationDao;
 import ekgp49.dbc.domain.InfoMenu;
 import ekgp49.dbc.domain.Information;
-import ekgp49.sql.DataSource;
 import ekgp49.sql.PlatformTransactionManager;
 import ekgp49.sql.TransactionTemplate;
 import ekgp49.util.Prompt;
@@ -14,16 +15,14 @@ import ekgp49.util.Prompt;
 public class InformationUpdateServlet implements Servlet {
   InformationDao infoDao;
   InfoMenuDao infoMenuDao;
-  DataSource conFactory;
   PlatformTransactionManager txManager;
   TransactionTemplate transactionTemplate;
 
   public InformationUpdateServlet(InformationDao infoDao, InfoMenuDao infoMenuDao,
-      DataSource conFactory) {
+      PlatformTransactionManager txManager) {
     this.infoDao = infoDao;
     this.infoMenuDao = infoMenuDao;
-    this.conFactory = conFactory;
-    txManager = new PlatformTransactionManager(conFactory);
+    this.txManager = txManager;
     transactionTemplate = new TransactionTemplate(txManager);
   }
 
@@ -64,7 +63,7 @@ public class InformationUpdateServlet implements Servlet {
           break;
         case 8:
           out.println("메뉴: ");
-          changeMenu(out, in, no);
+          changeMenu(out, in, info);
           break;
         case 9:
           info.setCafeName(Prompt.getInputString(in, out, "상호: "));
@@ -75,7 +74,7 @@ public class InformationUpdateServlet implements Servlet {
           info.setCloseTime(Prompt.getInputString(in, out, "클로즈시간: "));
           info.setHolliday(Prompt.getInputString(in, out, "정기 휴일: "));
           out.println("메뉴: ");
-          changeMenu(out, in, no);
+          changeMenu(out, in, info);
           break;
         default:
           out.println("유효한 입력이 아닙니다.");
@@ -91,9 +90,10 @@ public class InformationUpdateServlet implements Servlet {
 
   }
 
-  private void changeMenu(PrintStream out, Scanner in, int no) throws Exception {
+  private void changeMenu(PrintStream out, Scanner in, Information info) throws Exception {
     transactionTemplate.execute(() -> {
-      infoMenuDao.deleteAll(no);
+      infoMenuDao.deleteAll(info.getNo());
+      List<InfoMenu> menuList = new ArrayList<>();
       while (true) {
         InfoMenu menu = new InfoMenu();
         String name = Prompt.getInputString(in, out, "> ");
@@ -101,9 +101,11 @@ public class InformationUpdateServlet implements Servlet {
           break;
         }
         menu.setName(name);
-        menu.setInformationNo(no);
-        infoMenuDao.insert(menu);
+        menu.setInformationNo(info.getNo());
+        menuList.add(menu);
       }
+      info.setMenuList(menuList);
+      infoMenuDao.insert(info);
       return null;
     });
   }

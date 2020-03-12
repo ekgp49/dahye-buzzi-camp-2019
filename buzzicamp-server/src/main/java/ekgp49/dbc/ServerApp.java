@@ -11,6 +11,7 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import org.apache.ibatis.session.SqlSessionFactory;
 import ekgp49.dbc.context.ApplicationContextListener;
 import ekgp49.dbc.dao.InfoMenuDao;
 import ekgp49.dbc.dao.InformationDao;
@@ -27,21 +28,77 @@ import ekgp49.dbc.servlet.ReviewListServlet;
 import ekgp49.dbc.servlet.ReviewRateServlet;
 import ekgp49.dbc.servlet.ReviewUpdateServlet;
 import ekgp49.dbc.servlet.Servlet;
-import ekgp49.sql.DataSource;
+import ekgp49.sql.PlatformTransactionManager;
+import ekgp49.sql.SqlSessionFactoryProxy;
 
 public class ServerApp {
 
-  public static void main(String[] args) {
-    ServerApp app = new ServerApp();
-    app.addListener(new DataLoaderListener());
-    app.service();
-  }
   Set<ApplicationContextListener> listeners = new HashSet<>();
   Map<String, Object> context = new HashMap<>();
   Map<String, Servlet> servletMap = new HashMap<>();
   ExecutorService executorService = Executors.newCachedThreadPool();
 
   boolean serverStop = false;
+
+  void service() {
+    notifyApplicationInitialized();
+    InformationDao infoDao = (InformationDao) context.get("infoDao");
+    ReviewDao reviewDao = (ReviewDao) context.get("reviewDao");
+    InfoMenuDao infoMenuDao = (InfoMenuDao) context.get("infoMenuDao");
+    SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) context.get("sqlSessionFactory");
+    PlatformTransactionManager txManager =
+        (PlatformTransactionManager) context.get("transactionManager");
+
+    System.out.println("앱 서버입니다");
+
+    servletMap.put("/info/add", new InformationAddServlet(infoDao, infoMenuDao, txManager));
+    servletMap.put("/info/delete", new InformationDeleteServlet(infoDao, infoMenuDao, txManager));
+    servletMap.put("/info/list", new InformationListServlet(infoDao));
+    servletMap.put("/info/update", new InformationUpdateServlet(infoDao, infoMenuDao, txManager));
+    servletMap.put("/info/search", new InformationSearchServlet(infoDao));
+    servletMap.put("/info/detail", new InformationDetailServlet(infoDao, infoMenuDao));
+
+    servletMap.put("/review/add", new ReviewAddServlet(reviewDao));
+    servletMap.put("/review/delete", new ReviewDeleteServlet(reviewDao));
+    servletMap.put("/review/list", new ReviewListServlet(reviewDao));
+    servletMap.put("/review/star", new ReviewRateServlet(reviewDao));
+    servletMap.put("/review/update", new ReviewUpdateServlet(reviewDao));
+
+    try (ServerSocket serverSocket = new ServerSocket(9999)) {
+      System.out.println("클라이언트 연결 대기중...");
+      while (true) {
+        Socket socket = serverSocket.accept(); // 여기에 try{} 걸면 소켓 닫혀서 오류남
+        executorService.submit(() -> {
+          processRequest(socket);
+
+          ((SqlSessionFactoryProxy) sqlSessionFactory).closeSession();
+          System.out.println("-------------연결 종료---------------");
+        });
+
+        if (serverStop == true) {
+          break;
+        }
+      }
+
+
+    } catch (Exception e) {
+      System.out.println("서버 문제 발생");
+      e.printStackTrace();
+    }
+    executorService.shutdown();
+    while (true) {
+      if (executorService.isTerminated()) {
+        break;
+      }
+      try {
+        Thread.sleep(500);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+    notifyApplicationDestroyed();
+    System.out.println("서버 종료");
+  }
 
 
   public void addListener(ApplicationContextListener listener) {
@@ -114,61 +171,10 @@ public class ServerApp {
     listeners.remove(listener);
   }
 
-  void service() {
-    notifyApplicationInitialized();
-    InformationDao infoDao = (InformationDao) context.get("infoDao");
-    ReviewDao reviewDao = (ReviewDao) context.get("reviewDao");
-    InfoMenuDao infoMenuDao = (InfoMenuDao) context.get("infoMenuDao");
-    DataSource dataSource = (DataSource) context.get("dataSource");
-
-    System.out.println("앱 서버입니다");
-
-    servletMap.put("/info/add", new InformationAddServlet(infoDao, infoMenuDao, dataSource));
-    servletMap.put("/info/delete", new InformationDeleteServlet(infoDao, infoMenuDao, dataSource));
-    servletMap.put("/info/list", new InformationListServlet(infoDao));
-    servletMap.put("/info/update", new InformationUpdateServlet(infoDao, infoMenuDao, dataSource));
-    servletMap.put("/info/search", new InformationSearchServlet(infoDao));
-    servletMap.put("/info/detail", new InformationDetailServlet(infoDao, infoMenuDao));
-
-    servletMap.put("/review/add", new ReviewAddServlet(reviewDao));
-    servletMap.put("/review/delete", new ReviewDeleteServlet(reviewDao));
-    servletMap.put("/review/list", new ReviewListServlet(reviewDao));
-    servletMap.put("/review/star", new ReviewRateServlet(reviewDao));
-    servletMap.put("/review/update", new ReviewUpdateServlet(reviewDao));
-
-    try (ServerSocket serverSocket = new ServerSocket(9999)) {
-      System.out.println("클라이언트 연결 대기중...");
-      while (true) {
-        Socket socket = serverSocket.accept(); // 여기에 try{} 걸면 소켓 닫혀서 오류남
-        executorService.submit(() -> {
-          processRequest(socket);
-          dataSource.removeConnection();
-          System.out.println("-------------연결 종료---------------");
-        });
-
-        if (serverStop == true) {
-          break;
-        }
-      }
-
-
-    } catch (Exception e) {
-      System.out.println("서버 문제 발생");
-      e.printStackTrace();
-    }
-    executorService.shutdown();
-    while (true) {
-      if (executorService.isTerminated()) {
-        break;
-      }
-      try {
-        Thread.sleep(500);
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    }
-    notifyApplicationDestroyed();
-    System.out.println("서버 종료");
+  public static void main(String[] args) {
+    ServerApp app = new ServerApp();
+    app.addListener(new DataLoaderListener());
+    app.service();
   }
 }
 

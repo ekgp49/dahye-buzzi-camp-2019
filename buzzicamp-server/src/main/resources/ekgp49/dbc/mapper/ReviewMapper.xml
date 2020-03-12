@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="ReviewMapper">
+
+  <resultMap type="Review" id="ReviewMap">
+    <id column="review_id" property="no"/>
+    <result column="name" property="cafeName"/>
+    <result column="customer" property="customer"/>
+    <result column="rate" property="starRate"/>
+    <result column="conts" property="content"/>
+    <result column="vw_cnt" property="viewCount"/>
+    <result column="cdt" property="createdDate"/>
+  </resultMap>
+
+  <sql id="select1">
+	  select
+      review_id,
+      name,
+      customer,
+      rate,
+      conts,
+      vw_cnt,
+      cdt
+  </sql>
+  
+   <select id="selectReview" resultMap="ReviewMap" parameterType="int">
+    <include refid="select1"/>
+    from 
+      review 
+    <where>
+      <if test="no != null">review_id=#{no}</if>
+    </where>
+  </select>
+  
+  <insert id="insertReview" parameterType="Review">
+  insert 
+    into review(name, customer, rate, conts)
+  values(
+    #{cafeName},
+    #{customer},
+    #{starRate},
+    #{content}
+   )
+  </insert>
+ 
+  <delete id="deleteReview" parameterType="int">
+    delete 
+     from
+      review
+     where
+      review_id=#{no}
+  </delete>
+  
+  <select id="selectReviewByRate" resultMap="ReviewMap" parameterType="int">
+    <include refid="select1"/>
+    from 
+      review 
+    where 
+      rate=#{value}
+  </select>
+
+  <update id="updateReview" parameterType="Review">
+    update
+      review
+    set
+      rate = #{starRate},
+      conts = #{content}
+    where review_id = #{no}
+  </update>
+  
+</mapper>
+
+
+
+
+

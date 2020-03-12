@@ -4,7 +4,6 @@ import java.io.PrintStream;
 import java.util.Scanner;
 import ekgp49.dbc.dao.InfoMenuDao;
 import ekgp49.dbc.dao.InformationDao;
-import ekgp49.sql.DataSource;
 import ekgp49.sql.PlatformTransactionManager;
 import ekgp49.sql.TransactionTemplate;
 import ekgp49.util.Prompt;
@@ -12,16 +11,14 @@ import ekgp49.util.Prompt;
 public class InformationDeleteServlet implements Servlet {
   InformationDao infoDao;
   InfoMenuDao infoMenuDao;
-  DataSource conFactory;
   PlatformTransactionManager txManager;
   TransactionTemplate transactionTemplate;
 
   public InformationDeleteServlet(InformationDao infoDao, InfoMenuDao infoMenuDao,
-      DataSource conFactory) {
+      PlatformTransactionManager txManager) {
     this.infoDao = infoDao;
     this.infoMenuDao = infoMenuDao;
-    this.conFactory = conFactory;
-    txManager = new PlatformTransactionManager(conFactory);
+    this.txManager = txManager;
     transactionTemplate = new TransactionTemplate(txManager);
   }
 
