@@ -65,9 +65,10 @@
   <update id="updateReview" parameterType="Review">
     update
       review
-    set
-      rate = #{starRate},
-      conts = #{content}
+    <set>
+      <if test="starRate != null and starRate != ''">rate = #{starRate},</if>
+      <if test="content != null and content !=''">conts = #{content}</if>
+    </set>
     where review_id = #{no}
   </update>
   

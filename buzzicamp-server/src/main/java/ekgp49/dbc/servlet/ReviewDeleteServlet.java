@@ -2,29 +2,20 @@ package ekgp49.dbc.servlet;
 
 import java.io.PrintStream;
 import java.util.Scanner;
-import ekgp49.dbc.dao.ReviewDao;
+import ekgp49.dbc.service.ReviewService;
 import ekgp49.util.Prompt;
 
 public class ReviewDeleteServlet implements Servlet {
-  ReviewDao reviewDao;
+  ReviewService reviewService;
 
-  public ReviewDeleteServlet(ReviewDao reviewDao) {
-    this.reviewDao = reviewDao;
+  public ReviewDeleteServlet(ReviewService reviewService) {
+    this.reviewService = reviewService;
   }
 
   @Override
   public void service(PrintStream out, Scanner in) throws Exception {
     int no = Prompt.getInputInt(in, out, "리뷰 번호? ");
-    if (reviewDao.findByNo(no) == null) {
-      throw new Exception("해당번호의 리뷰정보가 없습니다.");
-    }
-
-    try {
-      reviewDao.delete(no);
-      out.println("리뷰를 삭제했습니다.");
-      out.flush();
-    } catch (Exception e) {
-      throw e;
-    }
+    reviewService.delete(no);
+    out.println("리뷰를 삭제했습니다.");
   }
 }

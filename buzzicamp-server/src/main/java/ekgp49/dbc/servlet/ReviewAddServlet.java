@@ -2,15 +2,15 @@ package ekgp49.dbc.servlet;
 
 import java.io.PrintStream;
 import java.util.Scanner;
-import ekgp49.dbc.dao.ReviewDao;
 import ekgp49.dbc.domain.Review;
+import ekgp49.dbc.service.ReviewService;
 import ekgp49.util.Prompt;
 
 public class ReviewAddServlet implements Servlet {
-  ReviewDao reviewDao;
+  ReviewService reviewService;
 
-  public ReviewAddServlet(ReviewDao reviewDao) {
-    this.reviewDao = reviewDao;
+  public ReviewAddServlet(ReviewService reviewService) {
+    this.reviewService = reviewService;
   }
 
   @Override
@@ -21,10 +21,7 @@ public class ReviewAddServlet implements Servlet {
     review.setStarRate(Prompt.getInputInt(in, out, "별점? "));
     review.setContent(Prompt.getInputString(in, out, "내용? "));
 
-    if (reviewDao.insert(review) > 0) {
-      out.println("새 리뷰를 저장했습니다.");
-    } else {
-      throw new Exception("새 리뷰 저장 실패");
-    }
+    reviewService.add(review);
+    out.println("새 리뷰를 저장했습니다.");
   }
 }

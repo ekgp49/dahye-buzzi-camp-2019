@@ -4,16 +4,16 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
-import ekgp49.dbc.dao.InformationDao;
 import ekgp49.dbc.domain.InfoMenu;
 import ekgp49.dbc.domain.Information;
+import ekgp49.dbc.service.InformationService;
 import ekgp49.util.Prompt;
 
 public class InformationSearchServlet implements Servlet {
-  InformationDao infoDao;
+  InformationService informationService;
 
-  public InformationSearchServlet(InformationDao infoDao) {
-    this.infoDao = infoDao;
+  public InformationSearchServlet(InformationService informationService) {
+    this.informationService = informationService;
   }
 
   @Override
@@ -22,7 +22,7 @@ public class InformationSearchServlet implements Servlet {
     String keyword = Prompt.getInputString(in, out, "키워드? ");
     HashMap<String, Object> params = new HashMap<>();
     params.put("keyword", keyword);
-    infos = infoDao.search(params);
+    infos = informationService.search(params);
     for (Information info : infos) {
       out.printf("%d, %s, %s, %s, %s, %s ~ %s, %s\n", info.getNo(), info.getCafeName(),
           info.getCafeAddress(), info.getCafeCall(), info.getCafeWebSite(), info.getOpenTime(),

@@ -13,9 +13,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.apache.ibatis.session.SqlSessionFactory;
 import ekgp49.dbc.context.ApplicationContextListener;
-import ekgp49.dbc.dao.InfoMenuDao;
-import ekgp49.dbc.dao.InformationDao;
-import ekgp49.dbc.dao.ReviewDao;
+import ekgp49.dbc.service.InformationService;
+import ekgp49.dbc.service.ReviewService;
 import ekgp49.dbc.servlet.InformationAddServlet;
 import ekgp49.dbc.servlet.InformationDeleteServlet;
 import ekgp49.dbc.servlet.InformationDetailServlet;
@@ -28,7 +27,6 @@ import ekgp49.dbc.servlet.ReviewListServlet;
 import ekgp49.dbc.servlet.ReviewRateServlet;
 import ekgp49.dbc.servlet.ReviewUpdateServlet;
 import ekgp49.dbc.servlet.Servlet;
-import ekgp49.sql.PlatformTransactionManager;
 import ekgp49.sql.SqlSessionFactoryProxy;
 
 public class ServerApp {
@@ -42,27 +40,24 @@ public class ServerApp {
 
   void service() {
     notifyApplicationInitialized();
-    InformationDao infoDao = (InformationDao) context.get("infoDao");
-    ReviewDao reviewDao = (ReviewDao) context.get("reviewDao");
-    InfoMenuDao infoMenuDao = (InfoMenuDao) context.get("infoMenuDao");
+    InformationService informationService = (InformationService) context.get("informationService");
+    ReviewService reviewService = (ReviewService) context.get("reviewService");
     SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) context.get("sqlSessionFactory");
-    PlatformTransactionManager txManager =
-        (PlatformTransactionManager) context.get("transactionManager");
 
     System.out.println("앱 서버입니다");
 
-    servletMap.put("/info/add", new InformationAddServlet(infoDao, infoMenuDao, txManager));
-    servletMap.put("/info/delete", new InformationDeleteServlet(infoDao, infoMenuDao, txManager));
-    servletMap.put("/info/list", new InformationListServlet(infoDao));
-    servletMap.put("/info/update", new InformationUpdateServlet(infoDao, infoMenuDao, txManager));
-    servletMap.put("/info/search", new InformationSearchServlet(infoDao));
-    servletMap.put("/info/detail", new InformationDetailServlet(infoDao, infoMenuDao));
+    servletMap.put("/info/add", new InformationAddServlet(informationService));
+    servletMap.put("/info/delete", new InformationDeleteServlet(informationService));
+    servletMap.put("/info/list", new InformationListServlet(informationService));
+    servletMap.put("/info/update", new InformationUpdateServlet(informationService));
+    servletMap.put("/info/search", new InformationSearchServlet(informationService));
+    servletMap.put("/info/detail", new InformationDetailServlet(informationService));
 
-    servletMap.put("/review/add", new ReviewAddServlet(reviewDao));
-    servletMap.put("/review/delete", new ReviewDeleteServlet(reviewDao));
-    servletMap.put("/review/list", new ReviewListServlet(reviewDao));
-    servletMap.put("/review/star", new ReviewRateServlet(reviewDao));
-    servletMap.put("/review/update", new ReviewUpdateServlet(reviewDao));
+    servletMap.put("/review/add", new ReviewAddServlet(reviewService));
+    servletMap.put("/review/delete", new ReviewDeleteServlet(reviewService));
+    servletMap.put("/review/list", new ReviewListServlet(reviewService));
+    servletMap.put("/review/star", new ReviewRateServlet(reviewService));
+    servletMap.put("/review/update", new ReviewUpdateServlet(reviewService));
 
     try (ServerSocket serverSocket = new ServerSocket(9999)) {
       System.out.println("클라이언트 연결 대기중...");

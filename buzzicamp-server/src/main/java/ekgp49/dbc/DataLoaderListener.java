@@ -6,9 +6,14 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import ekgp49.dbc.context.ApplicationContextListener;
+import ekgp49.dbc.dao.InfoMenuDao;
+import ekgp49.dbc.dao.InformationDao;
+import ekgp49.dbc.dao.ReviewDao;
 import ekgp49.dbc.dao.mariadb.InfoMenuDaoImpl;
 import ekgp49.dbc.dao.mariadb.InformationDaoImpl;
 import ekgp49.dbc.dao.mariadb.ReviewDaoImpl;
+import ekgp49.dbc.service.impl.InformationServiceImpl;
+import ekgp49.dbc.service.impl.ReviewServiceImpl;
 import ekgp49.sql.PlatformTransactionManager;
 import ekgp49.sql.SqlSessionFactoryProxy;
 
@@ -20,14 +25,17 @@ public class DataLoaderListener implements ApplicationContextListener {
       InputStream inputStream = Resources.getResourceAsStream("ekgp49/dbc/conf/mybatis-config.xml");
       SqlSessionFactory sqlSessionFactory =
           new SqlSessionFactoryProxy(new SqlSessionFactoryBuilder().build(inputStream));
+      PlatformTransactionManager txManager = new PlatformTransactionManager(sqlSessionFactory);
 
       context.put("sqlSessionFactory", sqlSessionFactory);
+      InformationDao infoDao = new InformationDaoImpl(sqlSessionFactory);
+      ReviewDao reviewDao = new ReviewDaoImpl(sqlSessionFactory);
+      InfoMenuDao infoMenuDao = new InfoMenuDaoImpl(sqlSessionFactory);
 
-      context.put("infoDao", new InformationDaoImpl(sqlSessionFactory));
-      context.put("reviewDao", new ReviewDaoImpl(sqlSessionFactory));
-      context.put("infoMenuDao", new InfoMenuDaoImpl(sqlSessionFactory));
+      context.put("informationService",
+          new InformationServiceImpl(infoDao, infoMenuDao, txManager));
+      context.put("reviewService", new ReviewServiceImpl(reviewDao));
 
-      context.put("transactionManager", new PlatformTransactionManager(sqlSessionFactory));
 
     } catch (Exception e) {
       e.printStackTrace();
